@@ -1,1 +1,3 @@
-com\mycompany\restaurantepersistencia\RestaurantePersistencia.class
+com\mycompany\restaurantepersistencia\IClienteDAO.class
+com\mycompany\restaurantepersistencia\ClienteDAO.class
+com\mycompany\restaurantepersistencia\PersistenciaException.class

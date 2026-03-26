@@ -35,7 +35,7 @@ public class Cliente implements Serializable {
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
     
-    @OneToMany(mappedBy = "clientes")
+    @OneToMany(mappedBy = "cliente")
     private List<Comanda> comandas;
 
     public Cliente() {
