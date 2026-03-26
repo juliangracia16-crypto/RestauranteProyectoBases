@@ -2,7 +2,9 @@
 package com.mycompany.restaurantepersistencia;
 
 import com.mycompany.restaurantedominio.ClienteFrecuente;
+import com.mycompany.restaurantedominio.ClienteGeneral;
 import com.mycompany.restaurantedtos.ClienteFrecuenteDTO;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,16 +52,6 @@ public class ClienteDAOTest {
             assertEquals(clienteDTO.getCorreo(),clienteActualizado.getCorreo());
         });
     }
-//    @Test
-//    public void testActualizarClienteFrecuenteLanzaExcepcionOk(){
-//        Long idPrueba = -8l;
-//        ClienteFrecuenteDTO clienteDTO = new ClienteFrecuenteDTO(idPrueba,"Julian Gracia","6371254214","julian@mail.com");
-//        String mensajeEsperado = "No se pudo actualizar el cliente";
-//        Exception ex = assertThrows(PersistenciaException.class,()->{
-//            clienteDAO.actualizar(clienteDTO);
-//        });
-//        assertEquals(mensajeEsperado,ex.getMessage());
-//    }
     @Test
     public void testEliminarClienteFrecuenteFuncionaOk(){
         Long idPrueba = 1l;
@@ -70,5 +62,28 @@ public class ClienteDAOTest {
             assertNull(clienteEliminado);
         });
     }
-    
+    @Test
+    public void testBuscarClienteFrecuentePorIdFuncionaOk(){
+        Long idPrueba = 3l;
+        assertDoesNotThrow(()->{
+            ClienteFrecuente clienteEncontrado = clienteDAO.buscarPorId(idPrueba);
+            assertNotNull(clienteEncontrado.getIdCliente());
+            assertEquals(idPrueba,clienteEncontrado.getIdCliente());
+        });
+    }
+    @Test
+    public void testBuscarTodosLosClientesFrecuentesFuncionaOk(){
+        assertDoesNotThrow(()->{
+            List<ClienteFrecuente> clientesEncontrados = clienteDAO.obtenerTodos();
+            assertNotNull(clientesEncontrados);
+            assertTrue(clientesEncontrados.size() > 0);
+        });
+    }
+    @Test
+    public void testCrerClienteGeneralFuncionaOk(){
+        assertDoesNotThrow(()->{
+            ClienteGeneral clienteGeneral = clienteDAO.crear();
+            assertNotNull(clienteGeneral.getIdCliente());
+        });
+    }
 }
