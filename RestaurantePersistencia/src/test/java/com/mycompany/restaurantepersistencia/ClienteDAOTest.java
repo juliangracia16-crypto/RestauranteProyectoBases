@@ -50,6 +50,25 @@ public class ClienteDAOTest {
             assertEquals(clienteDTO.getCorreo(),clienteActualizado.getCorreo());
         });
     }
-    
+//    @Test
+//    public void testActualizarClienteFrecuenteLanzaExcepcionOk(){
+//        Long idPrueba = -8l;
+//        ClienteFrecuenteDTO clienteDTO = new ClienteFrecuenteDTO(idPrueba,"Julian Gracia","6371254214","julian@mail.com");
+//        String mensajeEsperado = "No se pudo actualizar el cliente";
+//        Exception ex = assertThrows(PersistenciaException.class,()->{
+//            clienteDAO.actualizar(clienteDTO);
+//        });
+//        assertEquals(mensajeEsperado,ex.getMessage());
+//    }
+    @Test
+    public void testEliminarClienteFrecuenteFuncionaOk(){
+        Long idPrueba = 1l;
+        assertDoesNotThrow(()->{
+            ClienteFrecuente clienteEliminar = clienteDAO.eliminar(idPrueba);
+            assertNotNull(clienteEliminar.getIdCliente());
+            ClienteFrecuente clienteEliminado = clienteDAO.buscarPorId(idPrueba);
+            assertNull(clienteEliminado);
+        });
+    }
     
 }

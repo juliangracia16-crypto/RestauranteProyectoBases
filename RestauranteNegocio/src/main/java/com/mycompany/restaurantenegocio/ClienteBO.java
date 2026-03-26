@@ -61,6 +61,12 @@ public class ClienteBO implements IClienteBO{
         if(!esCorreoValido(cliente.getCorreo())){
             throw new NegocioException("Nuevo orreo electronico con formato invalido.");
         }
+        if(cliente.getIdCliente() <= 0){
+            throw new NegocioException("El ID del cliente a actualizar debe ser un numero positivo.");
+        }
+        if(cliente.getIdCliente() == null){
+            throw new NegocioException("El ID del cliente a actualizar no puede ser nulo.");
+        }
         try{
             ClienteFrecuente clienteFrecuente = clienteDAO.actualizar(cliente);
             return clienteFrecuente;
