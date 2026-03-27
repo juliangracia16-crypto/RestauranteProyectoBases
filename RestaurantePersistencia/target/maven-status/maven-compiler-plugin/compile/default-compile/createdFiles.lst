@@ -1,3 +1,7 @@
+com\mycompany\restaurantepersistencia\IIngredientesDAO.class
+com\mycompany\restaurantepersistencia\IngredientesDAO.class
+com\mycompany\restaurantepersistencia\adapters\NuevoIngredienteDTOAIngredienteAdapter$1.class
+com\mycompany\restaurantepersistencia\adapters\NuevoIngredienteDTOAIngredienteAdapter.class
 com\mycompany\restaurantepersistencia\IClienteDAO.class
 com\mycompany\restaurantepersistencia\ClienteDAO.class
 com\mycompany\restaurantepersistencia\PersistenciaException.class

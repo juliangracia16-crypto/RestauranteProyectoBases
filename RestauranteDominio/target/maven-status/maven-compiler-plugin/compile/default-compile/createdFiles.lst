@@ -2,5 +2,7 @@ com\mycompany\restaurantedominio\EstadoComanda.class
 com\mycompany\restaurantedominio\ManejadorConexiones.class
 com\mycompany\restaurantedominio\Comanda.class
 com\mycompany\restaurantedominio\Cliente.class
+com\mycompany\restaurantedominio\UnidadMedida.class
 com\mycompany\restaurantedominio\ClienteGeneral.class
+com\mycompany\restaurantedominio\Ingrediente.class
 com\mycompany\restaurantedominio\ClienteFrecuente.class
