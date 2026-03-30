@@ -1,20 +1,166 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.mycompany.restaurantepresentacion;
 
-/**
- *
- * @author daren
- */
-public class FrmListaClientes extends javax.swing.JPanel {
+import com.mycompany.restaurantedominio.ClienteFrecuente;
+import com.mycompany.restaurantenegocio.ClienteBO;
+import com.mycompany.restaurantenegocio.NegocioException;
+import com.mycompany.restaurantepersistencia.ClienteDAO;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
-    /**
-     * Creates new form FrmListaClientes
-     */
-    public FrmListaClientes() {
+public class FrmBuscadorClientes extends javax.swing.JDialog {
+
+    // ── Atributos ─────────────────────────────────────────────────────────────
+    private DefaultTableModel modeloTabla;
+    private final ClienteBO clienteBO;
+    private ClienteFrecuente clienteSeleccionado;
+
+    // ── Constructor ───────────────────────────────────────────────────────────
+    public FrmBuscadorClientes(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        this.clienteBO = new ClienteBO(new ClienteDAO());
+        this.clienteSeleccionado = null;
         initComponents();
+        configurarCombo();
+        configurarTabla();
+        configurarBotones();
+        configurarEventos();
+        cargarClientes();
+    }
+
+    public ClienteFrecuente getClienteSeleccionado() {
+        return clienteSeleccionado;
+    }
+
+    private void configurarCombo() {
+        cmbFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(
+                new String[]{"Nombre", "Teléfono", "Correo"}
+        ));
+    }
+
+    private void configurarTabla() {
+        modeloTabla = new DefaultTableModel(
+                new String[]{"ID", "Nombre", "Teléfono", "Correo"},
+                0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        jTable1.setModel(modeloTabla);
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        jTable1.getTableHeader().setReorderingAllowed(false);
+
+        // Ocultar columna ID
+        jTable1.getColumnModel().getColumn(0).setMinWidth(0);
+        jTable1.getColumnModel().getColumn(0).setMaxWidth(0);
+        jTable1.getColumnModel().getColumn(0).setWidth(0);
+
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(180);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(110);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(180);
+    }
+
+    private void configurarBotones() {
+        btnClienteGeneral.setEnabled(false); // se habilita al seleccionar fila
+    }
+
+    private void configurarEventos() {
+        jTable1.getSelectionModel().addListSelectionListener(e -> {
+            btnClienteGeneral.setEnabled(jTable1.getSelectedRow() != -1);
+        });
+
+        txtBuscadorClientes.addActionListener(e -> accionBuscar());
+        btnBuscar.addActionListener(e -> accionBuscar());
+        btnLimpiar.addActionListener(e -> accionLimpiar());
+        btnNuevo.addActionListener(e -> dispose());          // Cancelar
+        btnClienteGeneral.addActionListener(e -> accionSeleccionar()); // Seleccionar
+    }
+
+    private void cargarClientes() {
+        modeloTabla.setRowCount(0);
+        try {
+            List<ClienteFrecuente> clientes = clienteBO.obtenerTodos();
+            for (ClienteFrecuente c : clientes) {
+                modeloTabla.addRow(new Object[]{
+                    c.getIdCliente(),
+                    c.getNombre(),
+                    c.getTelefono(),
+                    c.getCorreo() != null ? c.getCorreo() : "—"
+                });
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar clientes: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void accionBuscar() {
+        String texto = txtBuscadorClientes.getText().trim().toLowerCase();
+        String filtro = cmbFiltro.getSelectedItem().toString();
+
+        if (texto.isEmpty()) {
+            cargarClientes();
+            return;
+        }
+
+        try {
+            List<ClienteFrecuente> todos = clienteBO.obtenerTodos();
+            modeloTabla.setRowCount(0);
+
+            for (ClienteFrecuente c : todos) {
+                boolean coincide = switch (filtro) {
+                    case "Nombre" ->
+                        c.getNombre().toLowerCase().contains(texto);
+                    case "Teléfono" ->
+                        c.getTelefono().contains(texto);
+                    case "Correo" ->
+                        c.getCorreo() != null && c.getCorreo().toLowerCase().contains(texto);
+                    default ->
+                        false;
+                };
+
+                if (coincide) {
+                    modeloTabla.addRow(new Object[]{
+                        c.getIdCliente(),
+                        c.getNombre(),
+                        c.getTelefono(),
+                        c.getCorreo() != null ? c.getCorreo() : "—"
+                    });
+                }
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al buscar: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void accionLimpiar() {
+        txtBuscadorClientes.setText("");
+        cmbFiltro.setSelectedIndex(0);
+        cargarClientes();
+    }
+
+    private void accionSeleccionar() {
+        int fila = jTable1.getSelectedRow();
+        if (fila == -1) {
+            return;
+        }
+
+        Long id = (Long) modeloTabla.getValueAt(fila, 0);
+        try {
+            clienteSeleccionado = clienteBO.buscarPorId(id);
+            dispose();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al obtener cliente: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -178,16 +324,41 @@ public class FrmListaClientes extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void initComponents() {
+        jButton1 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txtBuscadorClientes = new javax.swing.JTextField();
+        cmbFiltro = new javax.swing.JComboBox<>();
+        btnBuscar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        btnNuevo = new javax.swing.JButton();       // Cancelar
+        btnClienteGeneral = new javax.swing.JButton(); // Seleccionar
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setModal(true);
+
+        jLabel1.setText("Buscar:");
+        btnBuscar.setText("Buscar");
+        btnLimpiar.setText("Limpiar");
+        btnNuevo.setText("Cancelar");
+        btnClienteGeneral.setText("Seleccionar");
+
+    }
     private void txtBuscadorClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscadorClientesActionPerformed
-        // TODO add your handling code here:
+        accionBuscar();
     }//GEN-LAST:event_txtBuscadorClientesActionPerformed
 
     private void cmbFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFiltroActionPerformed
-        // TODO add your handling code here:
+        if (!txtBuscadorClientes.getText().trim().isEmpty())
+            accionBuscar();
     }//GEN-LAST:event_cmbFiltroActionPerformed
 
     private void btnClienteGeneralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteGeneralActionPerformed
-        // TODO add your handling code here:
+        accionSeleccionar();
     }//GEN-LAST:event_btnClienteGeneralActionPerformed
 
 
@@ -207,4 +378,5 @@ public class FrmListaClientes extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtBuscadorClientes;
     // End of variables declaration//GEN-END:variables
+
 }

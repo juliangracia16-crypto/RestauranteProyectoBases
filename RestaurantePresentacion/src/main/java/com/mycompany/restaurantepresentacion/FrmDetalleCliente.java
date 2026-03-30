@@ -1,21 +1,88 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package com.mycompany.restaurantepresentacion;
 
-/**
- *
- * @author daren
- */
+import com.mycompany.restaurantedominio.ClienteFrecuente;
+import com.mycompany.restaurantedominio.Comanda;
+import com.mycompany.restaurantedominio.EstadoComanda;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 public class FrmDetalleCliente extends javax.swing.JDialog {
 
-    /**
-     * Creates new form FrmDetalleCliente
-     */
-    public FrmDetalleCliente(java.awt.Frame parent, boolean modal) {
+    private final ClienteFrecuente cliente;
+    private DefaultTableModel modeloTabla;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public FrmDetalleCliente(java.awt.Frame parent, boolean modal, ClienteFrecuente cliente) {
         super(parent, modal);
+        this.cliente = cliente;
         initComponents();
+        configurarTabla();
+        cargarDatos();
+        configurarEventos();
+    }
+
+    private void configurarTabla() {
+        modeloTabla = new DefaultTableModel(
+                new String[]{"Folio", "Fecha", "Total", "Estado"},
+                0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        tblComandas.setModel(modeloTabla);
+        tblComandas.getTableHeader().setReorderingAllowed(false);
+        tblComandas.getColumnModel().getColumn(0).setPreferredWidth(150);
+        tblComandas.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tblComandas.getColumnModel().getColumn(2).setPreferredWidth(90);
+        tblComandas.getColumnModel().getColumn(3).setPreferredWidth(90);
+    }
+
+    private void cargarDatos() {
+        if (cliente == null) {
+            return;
+        }
+
+        lblValorNombre.setText(cliente.getNombre());
+        lblValorTelefono.setText(cliente.getTelefono());
+        lblValorElectronico.setText(
+                cliente.getCorreo() != null && !cliente.getCorreo().isEmpty()
+                ? cliente.getCorreo() : "—"
+        );
+        lblValorRegistro.setText(
+                cliente.getFechaRegistro() != null
+                ? cliente.getFechaRegistro().format(FORMATTER) : "—"
+        );
+
+        lblValorVisitas.setText(String.valueOf(cliente.getNumVisitas()));
+        lblValorVisitas1.setText(String.format("$%.2f", cliente.getTotalGastado()));
+        lblValorPuntos.setText(String.valueOf(cliente.getPuntosAcumulados()));
+
+        modeloTabla.setRowCount(0);
+        List<Comanda> comandas = cliente.getComandas();
+
+        if (comandas == null || comandas.isEmpty()) {
+            modeloTabla.addRow(new Object[]{"—", "—", "—", "Sin comandas registradas"});
+            return;
+        }
+
+        for (Comanda c : comandas) {
+            if (c.getEstado() != EstadoComanda.CANCELADA) {
+                modeloTabla.addRow(new Object[]{
+                    c.getFolio(),
+                    c.getFechaHora() != null ? c.getFechaHora().format(FORMATTER) : "—",
+                    String.format("$%.2f", c.getTotal()),
+                    c.getEstado().toString()
+                });
+            }
+        }
+    }
+
+    private void configurarEventos() {
+        btnCerrar.addActionListener(e -> dispose());
     }
 
     /**
@@ -291,48 +358,6 @@ public class FrmDetalleCliente extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmDetalleCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmDetalleCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmDetalleCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmDetalleCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FrmDetalleCliente dialog = new FrmDetalleCliente(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;

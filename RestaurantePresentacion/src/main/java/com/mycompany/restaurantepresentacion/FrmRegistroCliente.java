@@ -1,159 +1,118 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package com.mycompany.restaurantepresentacion;
 
+import com.mycompany.restaurantedominio.ClienteFrecuente;
+import com.mycompany.restaurantedtos.ClienteFrecuenteDTO;
+import com.mycompany.restaurantenegocio.ClienteBO;
+import com.mycompany.restaurantenegocio.NegocioException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author daren
- */
 public class FrmRegistroCliente extends javax.swing.JDialog {
 
-    private Object clienteEditar; // cambiamos object por el cliente de verdad ya despues
+    // ── Atributos ─────────────────────────────────────────────────────────────
+    private ClienteFrecuente clienteEditar;
+    private final ClienteBO clienteBO;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    /**
-     * Creates new form FrmRegistroCliente
-     */
-    
-    // CONSTRUCTOR DEL MODO NUEVO
-    public FrmRegistroCliente(java.awt.Frame parent, boolean modal) {
+    // ── Constructor NUEVO ─────────────────────────────────────────────────────
+    public FrmRegistroCliente(java.awt.Frame parent, boolean modal, ClienteBO clienteBO) {
         super(parent, modal);
-        initComponents();
+        this.clienteBO = clienteBO;
         this.clienteEditar = null;
-        configurarModo();
-        configurarEventos();
-    }
-
-    
-    // CONSTRUCTOR DE EL MODO EDITAR
-    public FrmRegistroCliente(java.awt.Frame parent, boolean modal, Object cliente) {
-        super(parent, modal);
         initComponents();
-        this.clienteEditar = cliente;
         configurarModo();
         configurarEventos();
     }
-    
-    // ESTO CONFIGURA LOS ATRIBUTOS DE EL FORM SEGUN EL MODO
+
+    // ── Constructor EDITAR ────────────────────────────────────────────────────
+    public FrmRegistroCliente(java.awt.Frame parent, boolean modal, ClienteBO clienteBO, ClienteFrecuente cliente) {
+        super(parent, modal);
+        this.clienteBO = clienteBO;
+        this.clienteEditar = cliente;
+        initComponents();
+        configurarModo();
+        configurarEventos();
+    }
+
     private void configurarModo() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
         if (clienteEditar == null) {
-            // MODO NUEVO
             lblTituloDinamico.setText("Nuevo Cliente");
-            txtFechaRegistro.setText(LocalDate.now().format(formatter));
+            txtFechaRegistro.setText(LocalDate.now().format(FORMATTER));
         } else {
-            // MODO EDITAR 
             lblTituloDinamico.setText("Editar Cliente");
-            
-
-            // Cliente c = (Cliente) clienteEditar;
-            // txtNombre.setText(c.getNombre());
-            // txtTelefono.setText(c.getTelefono());
-            // txtCorreo.setText(c.getCorreo());
-            // txtFechaRegistro.setText(c.getFechaRegistro().format(formatter));
+            txtNombre.setText(clienteEditar.getNombre());
+            txtTelefono.setText(clienteEditar.getTelefono());
+            txtCorreo.setText(clienteEditar.getCorreo() != null ? clienteEditar.getCorreo() : "");
+            txtFechaRegistro.setText(
+                    clienteEditar.getFechaRegistro() != null
+                    ? clienteEditar.getFechaRegistro().format(FORMATTER)
+                    : LocalDate.now().format(FORMATTER)
+            );
         }
     }
-    
-    
+
     private void configurarEventos() {
         lblGuardar.addActionListener(e -> accionGuardar());
         lblCancelar.addActionListener(e -> dispose());
     }
-    
-    private void accionGuardar() {
-        if (!validarCampos()) return;
 
-        String nombre   = txtNombre.getText().trim();
+    private void accionGuardar() {
+        if (!validarCampos()) {
+            return;
+        }
+
+        String nombre = txtNombre.getText().trim();
         String telefono = txtTelefono.getText().trim();
-        String correo   = txtCorreo.getText().trim();
+        String correo = txtCorreo.getText().trim().isEmpty() ? null : txtCorreo.getText().trim();
 
         try {
             if (clienteEditar == null) {
-                // MODO NUEVO
-                // Cliente nuevo = new Cliente(nombre, telefono, correo, LocalDate.now());
-                // ClienteBO.guardar(nuevo);
-                JOptionPane.showMessageDialog(this,
-                    "Cliente registrado correctamente.",
-                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                clienteBO.crear(new ClienteFrecuenteDTO(nombre, telefono, correo));
+                JOptionPane.showMessageDialog(this, "Cliente registrado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                // MODO EDITAR
-                // Cliente c = (Cliente) clienteEditar;
-                // c.setNombre(nombre);
-                // c.setTelefono(telefono);
-                // c.setCorreo(correo);
-                // ClienteBO.actualizar(c);
-                JOptionPane.showMessageDialog(this,
-                    "Cliente actualizado correctamente.",
-                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                clienteBO.actualizar(new ClienteFrecuenteDTO(clienteEditar.getIdCliente(), nombre, telefono, correo));
+                JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
             dispose();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,
-                "Error al guardar: " + ex.getMessage(),
-                "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    private boolean validarCampos() {
-        String nombre   = txtNombre.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        String correo   = txtCorreo.getText().trim();
 
-        // NOMBRE (OBLIGATORIO)
+    private boolean validarCampos() {
+        String nombre = txtNombre.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String correo = txtCorreo.getText().trim();
+
         if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "El nombre completo es obligatorio.",
-                "Campo requerido", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El nombre completo es obligatorio.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
             txtNombre.requestFocus();
             return false;
         }
-
-        // TELEFONO (OBLIGATORIO)
+        if (nombre.length() > 50) {
+            JOptionPane.showMessageDialog(this, "El nombre no puede superar los 50 caracteres.", "Campo inválido", JOptionPane.WARNING_MESSAGE);
+            txtNombre.requestFocus();
+            return false;
+        }
         if (telefono.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "El teléfono es obligatorio.",
-                "Campo requerido", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El teléfono es obligatorio.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
             txtTelefono.requestFocus();
             return false;
         }
-
-        // TELEFONO SOLO NUMEROS Y LONGITUD 10.
-        if (!telefono.matches("\\d{10}")) {
-            JOptionPane.showMessageDialog(this,
-                "El teléfono debe contener exactamente 10 dígitos numéricos.",
-                "Formato inválido", JOptionPane.WARNING_MESSAGE);
+        if (!telefono.matches("\\d+") || telefono.length() > 16) {
+            JOptionPane.showMessageDialog(this, "El teléfono debe contener solo dígitos y máximo 16 caracteres.", "Formato inválido", JOptionPane.WARNING_MESSAGE);
             txtTelefono.requestFocus();
             return false;
         }
-
-        // CORREO OPCIONAL, PERO SI SE LLENÓ DEBE TENER FORMATO VÁLIDO
-        if (!correo.isEmpty() && !correo.matches("^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$")) {
-            JOptionPane.showMessageDialog(this,
-                "El correo electrónico no tiene un formato válido.",
-                "Formato inválido", JOptionPane.WARNING_MESSAGE);
+        if (!correo.isEmpty() && !correo.matches("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$")) {
+            JOptionPane.showMessageDialog(this, "El correo electrónico no tiene un formato válido.", "Formato inválido", JOptionPane.WARNING_MESSAGE);
             txtCorreo.requestFocus();
             return false;
         }
-
-        // boolean existe = ClienteBO.existeTelefono(telefono, clienteEditar);
-        // if (existe) {
-        //     JOptionPane.showMessageDialog(this,
-        //         "Ya existe un cliente registrado con ese número de teléfono.",
-        //         "Duplicado", JOptionPane.WARNING_MESSAGE);
-        //     return false;
-        // }
-
         return true;
     }
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -362,54 +321,12 @@ public class FrmRegistroCliente extends javax.swing.JDialog {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
-        // TODO add your handling code here:
+        accionGuardar();
     }//GEN-LAST:event_txtCorreoActionPerformed
 
     private void txtFechaRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaRegistroActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFechaRegistroActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmRegistroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmRegistroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmRegistroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmRegistroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FrmRegistroCliente dialog = new FrmRegistroCliente(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
