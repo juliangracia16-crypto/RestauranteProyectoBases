@@ -1,6 +1,9 @@
 com\mycompany\restaurantedominio\EstadoComanda.class
 com\mycompany\restaurantedominio\ManejadorConexiones.class
+com\mycompany\restaurantedominio\ProductoSeleccionado.class
+com\mycompany\restaurantedominio\Mesa.class
 com\mycompany\restaurantedominio\Comanda.class
+com\mycompany\restaurantedominio\DisponibilidadMesa.class
 com\mycompany\restaurantedominio\Cliente.class
 com\mycompany\restaurantedominio\UnidadMedida.class
 com\mycompany\restaurantedominio\ClienteGeneral.class

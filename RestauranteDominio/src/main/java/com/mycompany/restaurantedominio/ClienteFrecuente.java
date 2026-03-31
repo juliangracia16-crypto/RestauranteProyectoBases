@@ -9,9 +9,6 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -78,7 +75,7 @@ public class ClienteFrecuente extends Cliente implements Serializable {
     if (getComandas() != null) {
         for (Comanda c : getComandas()) {
             if (c.getEstado() != EstadoComanda.CANCELADA) {
-                LocalDate fecha = c.getFechaHora();
+                LocalDate fecha = c.getFechaHora().toLocalDate();
                 if (ultima == null || fecha.isAfter(ultima)) {
                     ultima = fecha;
                 }
@@ -86,7 +83,7 @@ public class ClienteFrecuente extends Cliente implements Serializable {
         }
     }
     return ultima;
-}
+    }
 
     public String getTelefono() {
         return telefono;

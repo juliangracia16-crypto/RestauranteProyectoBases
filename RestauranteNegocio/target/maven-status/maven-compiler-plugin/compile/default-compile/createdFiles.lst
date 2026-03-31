@@ -1,1 +1,8 @@
-com\mycompany\restaurantenegocio\RestauranteNegocio.class
+com\mycompany\restaurantenegocio\IClienteBO.class
+com\mycompany\restaurantenegocio\ComandaBO.class
+Excepciones\NegocioException.class
+com\mycompany\restaurantenegocio\IMesaBO.class
+com\mycompany\restaurantenegocio\MesaBO.class
+com\mycompany\restaurantenegocio\ClienteBO.class
+com\mycompany\restaurantenegocio\IComandaBO.class
+com\mycompany\restaurantenegocio\NegocioException.class

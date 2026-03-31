@@ -6,6 +6,9 @@ package com.mycompany.restaurantedominio;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -32,7 +36,7 @@ public class Comanda implements Serializable {
     private String folio;
     
     @Column(name = "fecha_hora_creacion", nullable = false)
-    private LocalDate fechaHora;
+    private LocalDateTime fechaHora;
     
     @Column(name = "total")
     private double total;
@@ -41,24 +45,58 @@ public class Comanda implements Serializable {
     private EstadoComanda estado;
     
     @ManyToOne()
+    @JoinColumn(name = "id_mesa", nullable = false)
+    private Mesa mesa;
+    
+    @ManyToOne()
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
+    
+//    @OneToMany(mappedBy = "comanda", cascade = CascadeType.PERSIST)
+//    private List<ProductoSeleccionado> productosSeleccionados;
 
     public Comanda() {
     }
 
-    public Comanda(String folio, LocalDate fechaHora, double total, EstadoComanda estado) {
+//    public Comanda(String folio, LocalDateTime fechaHora, double total, EstadoComanda estado, Mesa mesa, Cliente cliente, List<ProductoSeleccionado> productosSeleccionados) {
+//        this.folio = folio;
+//        this.fechaHora = fechaHora;
+//        this.total = total;
+//        this.estado = estado;
+//        this.mesa = mesa;
+//        this.cliente = cliente;
+//        this.productosSeleccionados = productosSeleccionados;
+//    }
+    
+    public Comanda(String folio, LocalDateTime fechaHora, double total, EstadoComanda estado) {
         this.folio = folio;
         this.fechaHora = fechaHora;
         this.total = total;
         this.estado = estado;
     }
 
-    public Comanda(String folio, LocalDate fechaHora, double total, EstadoComanda estado, Cliente cliente) {
+    public Comanda(String folio, LocalDateTime fechaHora, double total, EstadoComanda estado, Cliente cliente) {
         this.folio = folio;
         this.fechaHora = fechaHora;
         this.total = total;
         this.estado = estado;
+        this.cliente = cliente;
+    }
+
+    public Comanda(String folio, LocalDateTime fechaHora, double total, EstadoComanda estado, Mesa mesa) {
+        this.folio = folio;
+        this.fechaHora = fechaHora;
+        this.total = total;
+        this.estado = estado;
+        this.mesa = mesa;
+    }
+
+    public Comanda(String folio, LocalDateTime fechaHora, double total, EstadoComanda estado, Mesa mesa, Cliente cliente) {
+        this.folio = folio;
+        this.fechaHora = fechaHora;
+        this.total = total;
+        this.estado = estado;
+        this.mesa = mesa;
         this.cliente = cliente;
     }
     
@@ -78,11 +116,11 @@ public class Comanda implements Serializable {
         this.folio = folio;
     }
 
-    public LocalDate getFechaHora() {
+    public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(LocalDate fechaHora) {
+    public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 
@@ -109,9 +147,15 @@ public class Comanda implements Serializable {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-    
-    
 
+    public Mesa getMesa() {
+        return mesa;
+    }
+
+//    public List<ProductoSeleccionado> getProductosSeleccionados() {
+//        return productosSeleccionados;
+//    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -133,7 +177,7 @@ public class Comanda implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.restaurantedominio.Comanda[ id=" + id + " ]";
+        return "Comanda[ id=" + id + " ]";
     }
     
 }
