@@ -2,6 +2,7 @@
 package com.mycompany.restaurantedominio;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -33,7 +35,10 @@ public class Ingrediente implements Serializable {
     @Column (name = "unidad_medida", nullable = false)
     @Enumerated(EnumType.STRING)
     private UnidadMedida unidadMedida;
-
+    
+    @OneToMany(mappedBy = "ingrediente")
+    private List<ProductoIngrediente> ingredientes;
+    
     public Ingrediente() {
     }
 
@@ -41,6 +46,14 @@ public class Ingrediente implements Serializable {
         this.nombre = nombre;
         this.stock = stock;
         this.unidadMedida = unidadMedida;
+    }
+
+    public List<ProductoIngrediente> getIngredientes() {
+        return ingredientes;
+    }
+
+    public void setIngredientes(List<ProductoIngrediente> ingredientes) {
+        this.ingredientes = ingredientes;
     }
     
     public String getNombre() {
