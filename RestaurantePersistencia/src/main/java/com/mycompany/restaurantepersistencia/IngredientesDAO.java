@@ -5,7 +5,10 @@ import com.mycompany.restaurantedominio.Ingrediente;
 import com.mycompany.restaurantedominio.ManejadorConexiones;
 import com.mycompany.restaurantedtos.ActualizarIngredienteDTO;
 import com.mycompany.restaurantedtos.NuevoIngredienteDTO;
+import com.mycompany.restaurantepersistencia.adapters.IngredienteDominioAIngredienteDTOAdapter;
 import com.mycompany.restaurantepersistencia.adapters.NuevoIngredienteDTOAIngredienteAdapter;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
@@ -68,6 +71,38 @@ public class IngredientesDAO implements IIngredientesDAO{
         }catch(PersistenceException ex){
             LOGGER.severe(ex.getMessage());
             throw new PersistenciaException("No se pudo agregar el stock al ingrediente.",ex);
+        }
+    }
+
+    @Override
+    public Ingrediente consultarIngredientePorId(Long id) throws PersistenciaException {
+        try{
+            EntityManager entityManager = ManejadorConexiones.crearEntityManager();
+            entityManager.getTransaction().begin();
+            Ingrediente ingredienteEncontrado = entityManager.find(Ingrediente.class, id);
+            entityManager.getTransaction().commit();
+            return ingredienteEncontrado;
+        }catch(PersistenceException ex){
+            LOGGER.severe(ex.getMessage());
+            throw new PersistenciaException("No se pudo consultar el ingrediente.",ex);
+        }
+    }
+
+    @Override
+    public List<NuevoIngredienteDTO> consultarIngredientesDTO() throws PersistenciaException {
+        try{
+            EntityManager entityManager = ManejadorConexiones.crearEntityManager();
+            entityManager.getTransaction().begin();
+            String jpql = "SELECT i FROM Ingrediente i";
+            List<Ingrediente> ingredientes = entityManager.createQuery(jpql, Ingrediente.class).getResultList();
+            List<NuevoIngredienteDTO> ingredientesDTO = new LinkedList<>();
+            for (Ingrediente ingrediente : ingredientes) {
+                ingredientesDTO.add(IngredienteDominioAIngredienteDTOAdapter.adaptar(ingrediente));
+            }
+            return ingredientesDTO;
+        }catch(PersistenceException ex){
+            LOGGER.severe(ex.getMessage());
+            throw new PersistenciaException("No se pudieron consultar todos los ingredientes.",ex);
         }
     }
 }
