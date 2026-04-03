@@ -36,8 +36,8 @@ public class Ingrediente implements Serializable {
     @Enumerated(EnumType.STRING)
     private UnidadMedida unidadMedida;
     
-    @OneToMany(mappedBy = "ingrediente")
-    private List<ProductoIngrediente> ingredientes;
+//    @OneToMany(mappedBy = "ingrediente")
+//    private List<ProductoIngrediente> ingredientes;
     
     public Ingrediente() {
     }
@@ -48,13 +48,13 @@ public class Ingrediente implements Serializable {
         this.unidadMedida = unidadMedida;
     }
 
-    public List<ProductoIngrediente> getIngredientes() {
-        return ingredientes;
-    }
-
-    public void setIngredientes(List<ProductoIngrediente> ingredientes) {
-        this.ingredientes = ingredientes;
-    }
+//    public List<ProductoIngrediente> getIngredientes() {
+//        return ingredientes;
+//    }
+//
+//    public void setIngredientes(List<ProductoIngrediente> ingredientes) {
+//        this.ingredientes = ingredientes;
+//    }
     
     public String getNombre() {
         return nombre;
@@ -110,7 +110,7 @@ public class Ingrediente implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.restaurantedominio.Ingrediente[ id=" + id + " ]";
+        return "Ingrediente[ id=" + id + " ]";
     }
     
 }

@@ -1,3 +1,4 @@
 com\mycompany\restaurantepersistencia\ComandaDAOTest.class
 com\mycompany\restaurantepersistencia\IngredientesDAOTest.class
 com\mycompany\restaurantepersistencia\ClienteDAOTest.class
+com\mycompany\restaurantepersistencia\MesaDAOTest.class

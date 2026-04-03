@@ -27,21 +27,16 @@ public class MesaDAO implements IMesaDAO {
             EntityManager entityManager = ManejadorConexiones.crearEntityManager();
             entityManager.getTransaction().begin();
 
-            // Verificamos si ya existen mesas
             String jpql = "SELECT COUNT(m) FROM Mesa m";
             Long count = entityManager.createQuery(jpql, Long.class).getSingleResult();
 
-            if (count > 0) {
-                entityManager.getTransaction().commit();
-                return;
-            }
-            // Insertamos 20 mesas todas LIBRES
+            // Insertamos 20 mesas más a partir del último número
             for (Integer i = 1; i <= 20; i++) {
-                Mesa mesa = new Mesa(i, DisponibilidadMesa.LIBRE);
+                Mesa mesa = new Mesa((int)(count + i), DisponibilidadMesa.LIBRE);
                 entityManager.persist(mesa);
             }
             entityManager.getTransaction().commit();
-        }catch (PersistenceException ex) {
+        } catch (PersistenceException ex) {
             LOGGER.severe(ex.getMessage());
             throw new PersistenciaException("No se pudieron insertar las mesas", ex);
         }

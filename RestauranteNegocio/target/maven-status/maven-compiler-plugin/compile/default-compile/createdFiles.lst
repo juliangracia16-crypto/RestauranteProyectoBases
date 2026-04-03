@@ -5,4 +5,6 @@ com\mycompany\restaurantenegocio\IMesaBO.class
 com\mycompany\restaurantenegocio\MesaBO.class
 com\mycompany\restaurantenegocio\ClienteBO.class
 com\mycompany\restaurantenegocio\IComandaBO.class
+com\mycompany\restaurantenegocio\IngredientesBO.class
 com\mycompany\restaurantenegocio\NegocioException.class
+com\mycompany\restaurantenegocio\IIngredientesBO.class
