@@ -5,54 +5,133 @@
 package com.mycompany.restaurantedominio;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author PC GAMER MASTER RACE
  */
 @Entity
+@Table(name = "productos_seleccionados")
 public class ProductoSeleccionado implements Serializable {
-
-    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_producto_seleccionado")
     private Long id;
-
-    public Long getId() {
-        return id;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_comanda", nullable = false)
+    private Comanda comanda;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_producto", nullable = false)
+    private Producto producto;
+    
+    @Column(name = "cantidad", nullable = false)
+    private Integer cantidad;
+    
+    @Column(name = "precio_unitario", nullable = false)
+    private Double precioUnitario;
+    
+    @Column(name = "subtotal", nullable = false)
+    private Double subtotal;
+    
+    @Column(name = "comentario")
+    private String comentario;
+    
+    public ProductoSeleccionado() {}
+    
+    public ProductoSeleccionado(Comanda comanda, Producto producto, Integer cantidad, Double precioUnitario, String comentario) {
+        this.comanda        = comanda;
+        this.producto       = producto;
+        this.cantidad       = cantidad;
+        this.precioUnitario = precioUnitario;
+        this.subtotal       = precioUnitario * cantidad;
+        this.comentario     = comentario;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    
+    public Long getId() { 
+        return id; 
     }
-
+    
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+    
+    public Comanda getComanda() { 
+        return comanda; 
+    }
+    
+    public void setComanda(Comanda comanda) { 
+        this.comanda = comanda; 
+    }
+    
+    public Producto getProducto() { 
+        return producto; 
+    }
+    
+    public void setProducto(Producto producto) { 
+        this.producto = producto; 
+    }
+    
+    public Integer getCantidad() { 
+        return cantidad; 
+    }
+    
+    public void setCantidad(Integer cantidad) { 
+        this.cantidad = cantidad; 
+    }
+    
+    public Double getPrecioUnitario() { 
+        return precioUnitario; 
+    }
+    
+    public void setPrecioUnitario(Double precioUnitario) { 
+        this.precioUnitario = precioUnitario; 
+    }
+    
+    public Double getSubtotal() { 
+        return subtotal; 
+    }
+    
+    public void setSubtotal(Double subtotal) { 
+        this.subtotal = subtotal; 
+    }
+    
+    public String getComentario() { 
+        return comentario; 
+    }
+    
+    public void setComentario(String comentario) { 
+        this.comentario = comentario; 
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProductoSeleccionado)) {
-            return false;
-        }
+        if (!(object instanceof ProductoSeleccionado)) return false;
         ProductoSeleccionado other = (ProductoSeleccionado) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
+        if ((this.id == null && other.id != null) ||
+            (this.id != null && !this.id.equals(other.id))) return false;
         return true;
     }
-
+    
     @Override
     public String toString() {
-        return "com.mycompany.restaurantedominio.ProductoSeleccionado[ id=" + id + " ]";
+        return "ProductoSeleccionado[ id=" + id + " ]";
     }
     
 }

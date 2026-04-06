@@ -52,21 +52,21 @@ public class Comanda implements Serializable {
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
     
-//    @OneToMany(mappedBy = "comanda", cascade = CascadeType.PERSIST)
-//    private List<ProductoSeleccionado> productosSeleccionados;
+    @OneToMany(mappedBy = "comanda", cascade = CascadeType.PERSIST)
+    private List<ProductoSeleccionado> productosSeleccionados;
 
     public Comanda() {
     }
 
-//    public Comanda(String folio, LocalDateTime fechaHora, double total, EstadoComanda estado, Mesa mesa, Cliente cliente, List<ProductoSeleccionado> productosSeleccionados) {
-//        this.folio = folio;
-//        this.fechaHora = fechaHora;
-//        this.total = total;
-//        this.estado = estado;
-//        this.mesa = mesa;
-//        this.cliente = cliente;
-//        this.productosSeleccionados = productosSeleccionados;
-//    }
+    public Comanda(String folio, LocalDateTime fechaHora, double total, EstadoComanda estado, Mesa mesa, Cliente cliente, List<ProductoSeleccionado> productosSeleccionados) {
+        this.folio = folio;
+        this.fechaHora = fechaHora;
+        this.total = total;
+        this.estado = estado;
+        this.mesa = mesa;
+        this.cliente = cliente;
+        this.productosSeleccionados = productosSeleccionados;
+    }
     
     public Comanda(String folio, LocalDateTime fechaHora, double total, EstadoComanda estado) {
         this.folio = folio;
@@ -152,9 +152,9 @@ public class Comanda implements Serializable {
         return mesa;
     }
 
-//    public List<ProductoSeleccionado> getProductosSeleccionados() {
-//        return productosSeleccionados;
-//    }
+    public List<ProductoSeleccionado> getProductosSeleccionados() {
+        return productosSeleccionados;
+    }
     
     @Override
     public int hashCode() {

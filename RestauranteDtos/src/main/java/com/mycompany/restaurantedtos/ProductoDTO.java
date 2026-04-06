@@ -1,5 +1,4 @@
 package com.mycompany.restaurantedtos;
-
 import java.util.List;
 
 public class ProductoDTO {

@@ -7,6 +7,7 @@ import com.mycompany.restaurantedominio.ProductoIngrediente;
 import com.mycompany.restaurantedominio.ManejadorConexiones;
 import com.mycompany.restaurantedtos.ProductoDTO;
 import com.mycompany.restaurantedtos.ProductoIngredienteDTO;
+import com.mycompany.restaurantepersistencia.adapters.TipoProductoDominioATipoProductoDTOAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ public class ProductoDAO implements IProductoDAO {
                 dto.getNombre(),
                 dto.getDescripcion(),
                 dto.getPrecio(),
-                dto.getTipo() // TODO error en el tipo
+                TipoProductoDominioATipoProductoDTOAdapter.adaptar(dto.getTipo())
             );
 
             if (dto.getImagen() != null) {
@@ -48,8 +49,9 @@ public class ProductoDAO implements IProductoDAO {
         } catch (PersistenceException ex) {
             LOGGER.severe(ex.getMessage());
             throw new PersistenciaException("No se pudo registrar el producto.", ex);
-        }
+        }    
     }
+
 
     @Override
     public Producto actualizar(ProductoDTO dto) throws PersistenciaException {
@@ -61,7 +63,7 @@ public class ProductoDAO implements IProductoDAO {
             producto.setNombre(dto.getNombre());
             producto.setDescripcion(dto.getDescripcion());
             producto.setPrecio(dto.getPrecio());
-            producto.setTipo(dto.getTipo()); // TODO no sé como hacer aqui esto pq el tipo no es el mismo tiren paro y digan si saben que pedo
+            producto.setTipo(TipoProductoDominioATipoProductoDTOAdapter.adaptar(dto.getTipo()));
 
             if (dto.getImagen() != null) {
                 producto.setImagen(dto.getImagen());

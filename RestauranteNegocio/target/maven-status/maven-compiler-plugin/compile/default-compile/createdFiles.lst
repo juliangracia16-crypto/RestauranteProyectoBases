@@ -1,10 +1,14 @@
+Excepciones\NegocioException.class
+com\mycompany\restaurantenegocio\IComandaBO.class
+com\mycompany\restaurantenegocio\IProductoBO.class
+com\mycompany\restaurantenegocio\IIngredientesBO.class
 com\mycompany\restaurantenegocio\IClienteBO.class
 com\mycompany\restaurantenegocio\ComandaBO.class
-Excepciones\NegocioException.class
+com\mycompany\restaurantenegocio\ReporteClientesFrecuentesBO.class
 com\mycompany\restaurantenegocio\IMesaBO.class
 com\mycompany\restaurantenegocio\MesaBO.class
 com\mycompany\restaurantenegocio\ClienteBO.class
-com\mycompany\restaurantenegocio\IComandaBO.class
+com\mycompany\restaurantenegocio\IReporteClientesFrecuentesBO.class
+com\mycompany\restaurantenegocio\ProductoBO.class
 com\mycompany\restaurantenegocio\IngredientesBO.class
 com\mycompany\restaurantenegocio\NegocioException.class
-com\mycompany\restaurantenegocio\IIngredientesBO.class

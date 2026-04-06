@@ -8,6 +8,7 @@ import com.mycompany.restaurantedominio.Comanda;
 import com.mycompany.restaurantedominio.EstadoComanda;
 import com.mycompany.restaurantenegocio.IComandaBO;
 import com.mycompany.restaurantenegocio.IMesaBO;
+import com.mycompany.restaurantenegocio.IProductoBO;
 import com.mycompany.restaurantenegocio.NegocioException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,11 +27,13 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     
     private final IComandaBO comandaBO;
     private final IMesaBO mesaBO;
+    private final IProductoBO productoBO;
     private List<Comanda> listaActual = new ArrayList<>();
     
-    public FrmGestionComandas(IComandaBO comandaBO, IMesaBO mesaBO) {
+    public FrmGestionComandas(IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO) {
         this.comandaBO = comandaBO;
         this.mesaBO = mesaBO;
+        this.productoBO = productoBO;
         initComponents();
         inicializarTabla();
         insertarMesasIniciales();
@@ -261,7 +264,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbEstadoActionPerformed
 
     private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
-        FrmNuevaComanda frm = new FrmNuevaComanda(comandaBO, mesaBO);
+        FrmNuevaComanda frm = new FrmNuevaComanda(comandaBO, mesaBO, productoBO);
         frm.setVisible(true);
         frm.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -284,7 +287,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     private void btnVerYEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerYEditarActionPerformed
         Comanda sel = getComandaSeleccionada();
         if (sel == null) return;
-        FrmNuevaComanda frm = new FrmNuevaComanda(comandaBO, mesaBO, sel);
+        FrmNuevaComanda frm = new FrmNuevaComanda(comandaBO, mesaBO, productoBO, sel);
         frm.setVisible(true);
         frm.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
