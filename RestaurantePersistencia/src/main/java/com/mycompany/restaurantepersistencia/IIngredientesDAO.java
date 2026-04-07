@@ -3,6 +3,7 @@ package com.mycompany.restaurantepersistencia;
 
 import com.mycompany.restaurantedominio.Ingrediente;
 import com.mycompany.restaurantedtos.ActualizarIngredienteDTO;
+import com.mycompany.restaurantedtos.BuscadorIngredientesDTO;
 import com.mycompany.restaurantedtos.NuevoIngredienteDTO;
 import java.util.List;
 
@@ -16,4 +17,7 @@ public interface IIngredientesDAO {
     public abstract Ingrediente quitarStockIngrediente(ActualizarIngredienteDTO ingrediente) throws PersistenciaException;
     public abstract Ingrediente consultarIngredientePorId(Long id) throws PersistenciaException;
     public abstract List<NuevoIngredienteDTO> consultarIngredientesDTO() throws PersistenciaException;
+    public abstract List<Ingrediente> consultarIngredientes() throws PersistenciaException;
+    public abstract List<Ingrediente> consultarIngredientesFiltrados(BuscadorIngredientesDTO ingredienteFiltrado) throws PersistenciaException;
+    public abstract Ingrediente eliminarIngrediente(Long id) throws PersistenciaException;
 }

@@ -3,6 +3,7 @@ package com.mycompany.restaurantenegocio;
 
 import com.mycompany.restaurantedominio.Ingrediente;
 import com.mycompany.restaurantedtos.ActualizarIngredienteDTO;
+import com.mycompany.restaurantedtos.BuscadorIngredientesDTO;
 import com.mycompany.restaurantedtos.NuevoIngredienteDTO;
 import com.mycompany.restaurantepersistencia.IIngredientesDAO;
 import com.mycompany.restaurantepersistencia.PersistenciaException;
@@ -106,6 +107,40 @@ public class IngredientesBO implements IIngredientesBO{
             return ingredienteEncontrado;
         }catch(PersistenciaException ex){
             throw new NegocioException("Error al quitar el stock al ingrediente.",ex);
+        }
+    }
+    
+    @Override
+    public List<Ingrediente> consultarIngredientes() throws NegocioException{
+        try{
+            List<Ingrediente> ingredientes = ingredientesDAO.consultarIngredientes();
+            return ingredientes;
+        }catch(PersistenciaException ex){
+            throw new NegocioException("No se pudieron consultar todos los ingredientes correctamente.",ex);
+        }
+    }
+    
+    @Override
+    public List<Ingrediente> consultarIngredientesFiltrados(BuscadorIngredientesDTO ingredienteFiltrado) throws NegocioException {
+        try{
+            List<Ingrediente> ingredientesFiltrados = ingredientesDAO.consultarIngredientesFiltrados(ingredienteFiltrado);
+            return ingredientesFiltrados;
+        }catch(PersistenciaException ex){
+            throw new NegocioException("No se pudieron consultar los ingredientes correctamente.",ex);
+        }
+    }
+
+    @Override
+    public Ingrediente eliminarIngrediente(Long id) throws NegocioException {
+        try{
+            Ingrediente ingredienteAEliminar = ingredientesDAO.consultarIngredientePorId(id);
+            if(!ingredienteAEliminar.getIngredientes().isEmpty()){
+                throw new NegocioException("No se puede eliminar un ingrediente que ya se encuentra relacionado a un producto.");
+            }
+            Ingrediente ingredienteEliminado = ingredientesDAO.eliminarIngrediente(ingredienteAEliminar.getId());
+            return ingredienteEliminado;
+        }catch(PersistenciaException ex){
+            throw new NegocioException("No se pudo eliminar el ingrediente correctamente.");
         }
     }
     

@@ -4,6 +4,7 @@ package com.mycompany.restaurantepersistencia;
 import com.mycompany.restaurantedominio.Ingrediente;
 import com.mycompany.restaurantedominio.ManejadorConexiones;
 import com.mycompany.restaurantedtos.ActualizarIngredienteDTO;
+import com.mycompany.restaurantedtos.BuscadorIngredientesDTO;
 import com.mycompany.restaurantedtos.NuevoIngredienteDTO;
 import com.mycompany.restaurantepersistencia.adapters.IngredienteDominioAIngredienteDTOAdapter;
 import com.mycompany.restaurantepersistencia.adapters.NuevoIngredienteDTOAIngredienteAdapter;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -105,4 +107,63 @@ public class IngredientesDAO implements IIngredientesDAO{
             throw new PersistenciaException("No se pudieron consultar todos los ingredientes.",ex);
         }
     }
+    
+    @Override        
+    public List<Ingrediente> consultarIngredientes() throws PersistenciaException{
+        try{
+            EntityManager entityManager = ManejadorConexiones.crearEntityManager();
+            entityManager.getTransaction().begin();
+            String jpql = "SELECT i FROM Ingrediente i";
+            List<Ingrediente> ingredientes = entityManager.createQuery(jpql, Ingrediente.class).getResultList();
+            return ingredientes;
+        }catch(PersistenceException ex){
+            LOGGER.severe(ex.getMessage());
+            throw new PersistenciaException("No se pudieron consultar todos los ingredientes.",ex);
+        }
+    }
+
+    @Override
+    public List<Ingrediente> consultarIngredientesFiltrados(BuscadorIngredientesDTO ingredienteFiltrado) throws PersistenciaException {
+        try{
+            EntityManager entityManager = ManejadorConexiones.crearEntityManager();
+            StringBuilder jpql = new StringBuilder("SELECT i FROM IngredienteEntidad i WHERE 1=1");
+
+            if (ingredienteFiltrado.getNombre() != null && !ingredienteFiltrado.getNombre().trim().isEmpty()) {
+                jpql.append(" AND LOWER(i.nombre) LIKE LOWER(:nombre)");
+            }
+
+            if (ingredienteFiltrado.getUnidadMedida() != null) {
+                jpql.append(" AND i.unidadMedida = :unidadMedida");
+            }
+
+            TypedQuery<Ingrediente> query = entityManager.createQuery(jpql.toString(), Ingrediente.class);
+
+            if (ingredienteFiltrado.getNombre() != null && !ingredienteFiltrado.getNombre().trim().isEmpty()) {
+                query.setParameter("nombre", "%" + ingredienteFiltrado.getNombre().trim() + "%");
+            }
+            if (ingredienteFiltrado.getUnidadMedida() != null) {
+                query.setParameter("unidadMedida", ingredienteFiltrado.getUnidadMedida());
+            }
+            return query.getResultList();
+        }catch(PersistenceException ex){
+            LOGGER.severe(ex.getMessage());
+            throw new PersistenciaException("No se pudieron consultar los ingredientes correctamente.",ex);
+        }
+    }
+
+    @Override
+    public Ingrediente eliminarIngrediente(Long id) throws PersistenciaException {
+        try{
+            EntityManager entityManager = ManejadorConexiones.crearEntityManager();
+            entityManager.getTransaction().begin();
+            Ingrediente ingredienteEncontrado = entityManager.find(Ingrediente.class, id);
+            entityManager.remove(ingredienteEncontrado);
+            entityManager.getTransaction().commit();
+            return ingredienteEncontrado;
+        }catch(PersistenceException ex){
+            LOGGER.severe(ex.getMessage());
+            throw new PersistenciaException("No se pudieron consultar los ingredientes correctamente.",ex);
+        }
+    }
+
 }
