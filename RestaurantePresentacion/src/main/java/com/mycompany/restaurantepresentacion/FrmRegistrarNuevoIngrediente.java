@@ -1,7 +1,12 @@
 
 package com.mycompany.restaurantepresentacion;
 
+import com.mycompany.restaurantedominio.Ingrediente;
+import com.mycompany.restaurantedtos.NuevoIngredienteDTO;
 import com.mycompany.restaurantedtos.UnidadMedida;
+import com.mycompany.restaurantenegocio.IIngredientesBO;
+import com.mycompany.restaurantenegocio.NegocioException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -10,13 +15,16 @@ import com.mycompany.restaurantedtos.UnidadMedida;
 public class FrmRegistrarNuevoIngrediente extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmRegistrarNuevoIngrediente.class.getName());
-
+    private final IIngredientesBO ingredientesBO;
+    
     /**
      * Creates new form FrmRegistrarNuevoIngrediente
      */
-    public FrmRegistrarNuevoIngrediente() {
+    public FrmRegistrarNuevoIngrediente(IIngredientesBO ingredientesBO) {
+        this.ingredientesBO = ingredientesBO;
         initComponents();
         llenarComboUnidadMedida();
+        
     }
 
     /**
@@ -50,8 +58,10 @@ public class FrmRegistrarNuevoIngrediente extends javax.swing.JFrame {
         lblUnidadMedida.setText("Unidad de Medida: ");
 
         btnRegistrar.setText("Registrar");
+        btnRegistrar.addActionListener(this::btnRegistrarActionPerformed);
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -118,12 +128,54 @@ public class FrmRegistrarNuevoIngrediente extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        this.registrarNuevoIngrediente();
+    }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.vaciarForm();
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
     
     private void llenarComboUnidadMedida(){
         comboUnidadMedida.removeAllItems();
         comboUnidadMedida.addItem(UnidadMedida.PIEZA);
         comboUnidadMedida.addItem(UnidadMedida.GRAMOS);
         comboUnidadMedida.addItem(UnidadMedida.MILILITRO);
+    }
+    
+    private void registrarNuevoIngrediente(){
+        try{
+            if(txtNombreIngrediente.getText().trim().isEmpty() || txtStockInicial.getText().trim().isEmpty()){
+                JOptionPane.showMessageDialog(this,"Error en los datos del FORM.\n No deben estar vacios los campos de texto.","ERROR",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String nombre = txtNombreIngrediente.getText();
+            Integer stockInicial = Integer.valueOf(txtStockInicial.getText());
+            UnidadMedida unidadMedida = (UnidadMedida) comboUnidadMedida.getSelectedItem();
+            NuevoIngredienteDTO ingrediente = new NuevoIngredienteDTO(nombre.trim(),stockInicial,unidadMedida);
+            Ingrediente ingredienteRegistrado = ingredientesBO.registrarIngrediente(ingrediente);
+            String mensaje = """
+                            ¡Ingrediente Registrado Correctamente!
+                             ID Ingrediente:  """+ingredienteRegistrado.getId()+
+                            "\n"+"Nombre: "+ingredienteRegistrado.getNombre()+
+                            "\n"+"Stock Inicial: "+ingredienteRegistrado.getStock();
+            JOptionPane.showMessageDialog(this, mensaje, 
+            "Ingrediente Registrado Correctamente.", 
+            JOptionPane.INFORMATION_MESSAGE);
+            vaciarForm();
+        }catch(NumberFormatException ex){
+            JOptionPane.showMessageDialog(this, "Error al registrar el ingrediente.\n Se espera un numero enetero positivo. ","ERROR",JOptionPane.ERROR_MESSAGE);
+        } 
+        catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Error al registrar el ingrediente: " + ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void vaciarForm(){
+        txtNombreIngrediente.setText("");
+        txtStockInicial.setText("");
+        comboUnidadMedida.setSelectedIndex(0);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

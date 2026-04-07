@@ -1,7 +1,5 @@
-com\mycompany\restaurantepersistencia\adapters\IngredienteDominioAIngredienteDTOAdapter.class
 com\mycompany\restaurantepersistencia\adapters\TipoProductoDominioATipoProductoDTOAdapter$1.class
 com\mycompany\restaurantepersistencia\ComandaDAO.class
-com\mycompany\restaurantepersistencia\adapters\IngredienteDominioAIngredienteDTOAdapter$1.class
 com\mycompany\restaurantepersistencia\IIngredientesDAO.class
 com\mycompany\restaurantepersistencia\adapters\EstadoProductoDTOADominioAdapter$1.class
 com\mycompany\restaurantepersistencia\IngredientesDAO.class

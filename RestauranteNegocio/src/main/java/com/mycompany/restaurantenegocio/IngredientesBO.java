@@ -38,11 +38,9 @@ public class IngredientesBO implements IIngredientesBO{
             if(ingrediente.getUnidadMedida() == null){
                 throw new NegocioException("La unidad de medida no puede ser nula.");
             }
-            List<NuevoIngredienteDTO> ingredientes = ingredientesDAO.consultarIngredientesDTO();
-            for(NuevoIngredienteDTO i: ingredientes){
-                if(i.getNombre().trim().equals(ingrediente.getNombre().trim()) && i.getUnidadMedida() == ingrediente.getUnidadMedida()){
-                    throw new NegocioException("El ingrediente ya se encuentra registrado.");
-                }
+            Ingrediente ingredienteRegistrado = ingredientesDAO.consultarIngredienteRegistrado(ingrediente);
+            if(ingredienteRegistrado != null){
+                throw new NegocioException("No es posible registrar el ingrediente, ya que ya existe uno con el mismo nombre y unidad de medida.");
             }    
             Ingrediente nuevoIngrediente = ingredientesDAO.registrarIngrediente(ingrediente);
             return nuevoIngrediente;

@@ -1,4 +1,5 @@
 com\mycompany\restaurantedtos\MesaDTO.class
+com\mycompany\restaurantedtos\BuscadorIngredientesDTO.class
 com\mycompany\restaurantedtos\ComandaDTO.class
 com\mycompany\restaurantedtos\TipoProducto.class
 com\mycompany\restaurantedtos\EstadoProducto.class

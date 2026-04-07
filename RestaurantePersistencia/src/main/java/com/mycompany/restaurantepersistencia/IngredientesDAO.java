@@ -6,9 +6,7 @@ import com.mycompany.restaurantedominio.ManejadorConexiones;
 import com.mycompany.restaurantedtos.ActualizarIngredienteDTO;
 import com.mycompany.restaurantedtos.BuscadorIngredientesDTO;
 import com.mycompany.restaurantedtos.NuevoIngredienteDTO;
-import com.mycompany.restaurantepersistencia.adapters.IngredienteDominioAIngredienteDTOAdapter;
 import com.mycompany.restaurantepersistencia.adapters.NuevoIngredienteDTOAIngredienteAdapter;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -91,20 +89,28 @@ public class IngredientesDAO implements IIngredientesDAO{
     }
 
     @Override
-    public List<NuevoIngredienteDTO> consultarIngredientesDTO() throws PersistenciaException {
+    public Ingrediente consultarIngredienteRegistrado(NuevoIngredienteDTO ingrediente) throws PersistenciaException {
+        Ingrediente ingredienteAdaptado = NuevoIngredienteDTOAIngredienteAdapter.adaptar(ingrediente);
         try{
             EntityManager entityManager = ManejadorConexiones.crearEntityManager();
             entityManager.getTransaction().begin();
-            String jpql = "SELECT i FROM Ingrediente i";
-            List<Ingrediente> ingredientes = entityManager.createQuery(jpql, Ingrediente.class).getResultList();
-            List<NuevoIngredienteDTO> ingredientesDTO = new LinkedList<>();
-            for (Ingrediente ingrediente : ingredientes) {
-                ingredientesDTO.add(IngredienteDominioAIngredienteDTOAdapter.adaptar(ingrediente));
+            if (ingredienteAdaptado.getNombre() == null || ingredienteAdaptado.getNombre().trim().isEmpty() || ingredienteAdaptado.getUnidadMedida() == null) {
+                return null;
             }
-            return ingredientesDTO;
+            String jpql = "SELECT i " +
+                  "FROM Ingrediente i " +
+                  "WHERE LOWER(TRIM(i.nombre)) = LOWER(:nombre) " +
+                  "AND i.unidadMedida = :unidadMedida";
+            
+            List<Ingrediente> resultados = entityManager.createQuery(jpql, Ingrediente.class)
+            .setParameter("nombre", ingredienteAdaptado.getNombre().trim())
+            .setParameter("unidadMedida", ingredienteAdaptado.getUnidadMedida())
+            .getResultList();
+
+            return resultados.isEmpty() ? null : resultados.get(0);
         }catch(PersistenceException ex){
             LOGGER.severe(ex.getMessage());
-            throw new PersistenciaException("No se pudieron consultar todos los ingredientes.",ex);
+            throw new PersistenciaException("No se pudo consultar si se encuentra registrado el ingrediente.",ex);
         }
     }
     
@@ -126,7 +132,7 @@ public class IngredientesDAO implements IIngredientesDAO{
     public List<Ingrediente> consultarIngredientesFiltrados(BuscadorIngredientesDTO ingredienteFiltrado) throws PersistenciaException {
         try{
             EntityManager entityManager = ManejadorConexiones.crearEntityManager();
-            StringBuilder jpql = new StringBuilder("SELECT i FROM IngredienteEntidad i WHERE 1=1");
+            StringBuilder jpql = new StringBuilder("SELECT i FROM Ingrediente i WHERE 1=1");
 
             if (ingredienteFiltrado.getNombre() != null && !ingredienteFiltrado.getNombre().trim().isEmpty()) {
                 jpql.append(" AND LOWER(i.nombre) LIKE LOWER(:nombre)");
@@ -162,7 +168,7 @@ public class IngredientesDAO implements IIngredientesDAO{
             return ingredienteEncontrado;
         }catch(PersistenceException ex){
             LOGGER.severe(ex.getMessage());
-            throw new PersistenciaException("No se pudieron consultar los ingredientes correctamente.",ex);
+            throw new PersistenciaException("No se eliminar el ingrediente correctamente.",ex);
         }
     }
 
