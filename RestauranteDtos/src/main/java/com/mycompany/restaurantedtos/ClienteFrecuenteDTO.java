@@ -35,8 +35,11 @@ public class ClienteFrecuenteDTO {
         return idCliente;
     }
     
-    
-
+    //Se necesita para que en la dto se envie el telefono encriptado
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+  
     public String getNombre() {
         return nombre;
     }

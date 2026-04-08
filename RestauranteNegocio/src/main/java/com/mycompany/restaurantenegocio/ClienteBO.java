@@ -6,6 +6,7 @@ import com.mycompany.restaurantedominio.ClienteGeneral;
 import com.mycompany.restaurantedtos.ClienteFrecuenteDTO;
 import com.mycompany.restaurantepersistencia.IClienteDAO;
 import com.mycompany.restaurantepersistencia.PersistenciaException;
+import com.mycompany.restauranteutilidades.EncriptadorAES;
 import java.util.List;
 
 /**
@@ -37,6 +38,7 @@ public class ClienteBO implements IClienteBO{
             throw new NegocioException("Correo electronico con formato invalido.");
         }
         try{
+            cliente.setTelefono(EncriptadorAES.encriptar(cliente.getTelefono()));
             ClienteFrecuente clienteFrecuente = clienteDAO.crear(cliente);
             return clienteFrecuente;
         }catch(PersistenciaException ex){
@@ -95,6 +97,7 @@ public class ClienteBO implements IClienteBO{
         }
         try{
             ClienteFrecuente clienteFrecuente = clienteDAO.buscarPorId(id);
+            clienteFrecuente.setTelefono(EncriptadorAES.desencriptar(clienteFrecuente.getTelefono()));
             return clienteFrecuente;
         }catch(PersistenciaException ex){
             throw new NegocioException("Error al intentar consultar el cliente frecuente: "+id,ex);
@@ -105,6 +108,9 @@ public class ClienteBO implements IClienteBO{
     public List<ClienteFrecuente> obtenerTodos() throws NegocioException {
         try{
             List<ClienteFrecuente> clientesFrecuentes = clienteDAO.obtenerTodos();
+            for(ClienteFrecuente cliente: clientesFrecuentes){
+                cliente.setTelefono(EncriptadorAES.desencriptar(cliente.getTelefono()));
+            }
             return clientesFrecuentes;
         }catch(PersistenciaException ex){
             throw new NegocioException("Error al intentar consultar todos los clientes frecuentes.",ex);

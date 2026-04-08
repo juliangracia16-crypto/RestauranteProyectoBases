@@ -32,7 +32,9 @@ import com.mycompany.restaurantepresentacion.FrmGeneracionReportes;
 import com.mycompany.restaurantepresentacion.FrmGestionComandas;
 import com.mycompany.restaurantepresentacion.FrmGestionDeComandas;
 import com.mycompany.restaurantepresentacion.FrmInicio;
+import com.mycompany.restaurantepresentacion.FrmListaClientes;
 import com.mycompany.restaurantepresentacion.FrmRegistrarNuevoIngrediente;
+import com.mycompany.restaurantepresentacion.FrmRegistroCliente;
 import com.mycompany.restaurantepresentacion.FrmReporteClientesFrecuentes;
 
 
@@ -57,7 +59,9 @@ public class TestearLosFrames {
         IProductoBO productoBO = new ProductoBO(productoDAO);
         IReporteClientesFrecuentesBO reporteBO = new ReporteClientesFrecuentesBO(clienteDAO);
         
-        FrmInicio frame = new FrmInicio(clienteBO, comandaBO, mesaBO, productoBO, reporteBO);
+        //FrmInicio frame = new FrmInicio(clienteBO, comandaBO, mesaBO, productoBO, reporteBO);
+        //FrmRegistroCliente frame = new FrmRegistroCliente(null,true,(ClienteBO)clienteBO);
+        FrmListaClientes frame = new FrmListaClientes(null,true);
         frame.setVisible(true);
         
     }

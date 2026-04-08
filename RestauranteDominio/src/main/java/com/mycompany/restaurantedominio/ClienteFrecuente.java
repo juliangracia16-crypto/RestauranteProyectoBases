@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @DiscriminatorValue("FRECUENTE")
 public class ClienteFrecuente extends Cliente implements Serializable {
 
-    @Column(name = "telefono", nullable = false, length = 10)
+    @Column(name = "telefono", nullable = false, length = 255)
     private String telefono;
     
     @Column(name = "correo")
