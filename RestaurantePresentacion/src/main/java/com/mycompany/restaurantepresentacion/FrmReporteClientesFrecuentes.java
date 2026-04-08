@@ -14,6 +14,10 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.mycompany.restaurantedtos.ReporteClientesFrecuentesDTO;
+import com.mycompany.restaurantenegocio.IClienteBO;
+import com.mycompany.restaurantenegocio.IComandaBO;
+import com.mycompany.restaurantenegocio.IMesaBO;
+import com.mycompany.restaurantenegocio.IProductoBO;
 import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
 import com.mycompany.restaurantenegocio.NegocioException;
 import java.io.File;
@@ -34,10 +38,18 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(FrmReporteClientesFrecuentes.class.getName());
     
     private final IReporteClientesFrecuentesBO reporteBO;
+    private final IClienteBO clienteBO;
+    private final IComandaBO comandaBO;
+    private final IMesaBO mesaBO;
+    private final IProductoBO productoBO;
     private List<ReporteClientesFrecuentesDTO> listaActual = new ArrayList<>();
     
-    public FrmReporteClientesFrecuentes(IReporteClientesFrecuentesBO reporteBO) {
+    public FrmReporteClientesFrecuentes(IReporteClientesFrecuentesBO reporteBO, IClienteBO clienteBO, IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO) {
         this.reporteBO = reporteBO;
+        this.clienteBO = clienteBO;
+        this.comandaBO = comandaBO;
+        this.mesaBO = mesaBO;
+        this.productoBO = productoBO;
         initComponents();
         inicializarTabla();
         cargarReporte();
@@ -84,7 +96,6 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblReportesClientesFrecuentes = new javax.swing.JLabel();
         lblFiltrarPorNombres = new javax.swing.JLabel();
         txtFiltroPorNombre = new javax.swing.JTextField();
         lbl = new javax.swing.JLabel();
@@ -95,11 +106,12 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         btnVolver = new javax.swing.JButton();
         btnExportarClienteSeleccionado = new javax.swing.JButton();
+        pnlReporteClientesFrecuente = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        lblReportesClientesFrecuentes = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        lblReportesClientesFrecuentes.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblReportesClientesFrecuentes.setText("Reporte Clientes Frecuentes");
+        setBackground(new java.awt.Color(191, 192, 192));
 
         lblFiltrarPorNombres.setText("Filtrar por Nombre:");
 
@@ -107,9 +119,17 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
 
         lbl.setText("Visitas Minimas:");
 
+        txtVisitasMinimas.setCaretColor(new java.awt.Color(255, 255, 255));
+
+        btnFiltrar.setBackground(new java.awt.Color(23, 117, 209));
+        btnFiltrar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnFiltrar.setForeground(new java.awt.Color(255, 255, 255));
         btnFiltrar.setText("Filtrar");
         btnFiltrar.addActionListener(this::btnFiltrarActionPerformed);
 
+        btnTodosLosClientesPDF.setBackground(new java.awt.Color(0, 100, 0));
+        btnTodosLosClientesPDF.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnTodosLosClientesPDF.setForeground(new java.awt.Color(255, 255, 255));
         btnTodosLosClientesPDF.setText("Exportar Todos Clientes PDF");
         btnTodosLosClientesPDF.addActionListener(this::btnTodosLosClientesPDFActionPerformed);
 
@@ -126,23 +146,53 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        btnVolver.setBackground(new java.awt.Color(66, 66, 66));
+        btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnVolver.setForeground(new java.awt.Color(255, 255, 255));
         btnVolver.setText("Volver");
+        btnVolver.addActionListener(this::btnVolverActionPerformed);
 
+        btnExportarClienteSeleccionado.setBackground(new java.awt.Color(0, 100, 0));
+        btnExportarClienteSeleccionado.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnExportarClienteSeleccionado.setForeground(new java.awt.Color(255, 255, 255));
         btnExportarClienteSeleccionado.setText("ExportarPDF");
         btnExportarClienteSeleccionado.addActionListener(this::btnExportarClienteSeleccionadoActionPerformed);
+
+        pnlReporteClientesFrecuente.setBackground(new java.awt.Color(67, 82, 90));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Reportes--ClientesFrecuentes");
+
+        javax.swing.GroupLayout pnlReporteClientesFrecuenteLayout = new javax.swing.GroupLayout(pnlReporteClientesFrecuente);
+        pnlReporteClientesFrecuente.setLayout(pnlReporteClientesFrecuenteLayout);
+        pnlReporteClientesFrecuenteLayout.setHorizontalGroup(
+            pnlReporteClientesFrecuenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlReporteClientesFrecuenteLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(283, 283, 283))
+        );
+        pnlReporteClientesFrecuenteLayout.setVerticalGroup(
+            pnlReporteClientesFrecuenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlReporteClientesFrecuenteLayout.createSequentialGroup()
+                .addGap(0, 9, Short.MAX_VALUE)
+                .addComponent(jLabel1))
+        );
+
+        lblReportesClientesFrecuentes.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblReportesClientesFrecuentes.setForeground(new java.awt.Color(33, 84, 164));
+        lblReportesClientesFrecuentes.setText("Reporte de Clientes Frecuentes");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlReporteClientesFrecuente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(228, 228, 228)
-                .addComponent(lblReportesClientesFrecuentes)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
                         .addComponent(lblFiltrarPorNombres)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtFiltroPorNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -151,38 +201,43 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtVisitasMinimas, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnFiltrar)
+                        .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnExportarClienteSeleccionado)
-                        .addGap(143, 143, 143))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(btnTodosLosClientesPDF)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnVolver))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 762, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap()))))
+                        .addComponent(btnExportarClienteSeleccionado))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(btnTodosLosClientesPDF)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 762, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(261, 261, 261)
+                        .addComponent(lblReportesClientesFrecuentes)))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlReporteClientesFrecuente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblReportesClientesFrecuentes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFiltrarPorNombres)
                     .addComponent(txtFiltroPorNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl)
                     .addComponent(txtVisitasMinimas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFiltrar)
+                    .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnExportarClienteSeleccionado))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVolver)
-                    .addComponent(btnTodosLosClientesPDF))
-                .addGap(0, 8, Short.MAX_VALUE))
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnTodosLosClientesPDF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnVolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -340,6 +395,12 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnExportarClienteSeleccionadoActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        FrmGeneracionReportes frame = new FrmGeneracionReportes(reporteBO, comandaBO, mesaBO, productoBO, clienteBO);
+        frame.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
     
    
 
@@ -348,11 +409,13 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnTodosLosClientesPDF;
     private javax.swing.JButton btnVolver;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbl;
     private javax.swing.JLabel lblFiltrarPorNombres;
     private javax.swing.JLabel lblReportesClientesFrecuentes;
+    private javax.swing.JPanel pnlReporteClientesFrecuente;
     private javax.swing.JTextField txtFiltroPorNombre;
     private javax.swing.JTextField txtVisitasMinimas;
     // End of variables declaration//GEN-END:variables

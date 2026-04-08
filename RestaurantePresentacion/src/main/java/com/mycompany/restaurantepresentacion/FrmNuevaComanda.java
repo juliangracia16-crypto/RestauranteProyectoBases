@@ -208,10 +208,14 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
         cmbBuscarClientes = new javax.swing.JComboBox<>();
         btnAgregarProducto = new javax.swing.JButton();
         btnEliminarProducto = new javax.swing.JButton();
+        pnlNuevaComanda = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(191, 192, 192));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(33, 84, 164));
         jLabel1.setText("Nueva Comanda");
 
         lblFolio.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -239,7 +243,9 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
         cmbTipo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         cmbTipo.addActionListener(this::cmbTipoActionPerformed);
 
+        btnBuscarProductosParaAgregar.setBackground(new java.awt.Color(23, 117, 209));
         btnBuscarProductosParaAgregar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBuscarProductosParaAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscarProductosParaAgregar.setText("Buscar");
         btnBuscarProductosParaAgregar.addActionListener(this::btnBuscarProductosParaAgregarActionPerformed);
 
@@ -272,35 +278,70 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
 
+        btnGuardar.setBackground(new java.awt.Color(0, 128, 0));
         btnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(this::btnGuardarActionPerformed);
 
+        btnCancelar.setBackground(new java.awt.Color(200, 0, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.setText("Cancelar Comanda");
         btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
+        btnEntregar.setBackground(new java.awt.Color(255, 140, 0));
         btnEntregar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnEntregar.setForeground(new java.awt.Color(255, 255, 255));
         btnEntregar.setText("Entregar");
         btnEntregar.addActionListener(this::btnEntregarActionPerformed);
 
         lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblTotal.setText("Total:");
 
+        btnVolver.setBackground(new java.awt.Color(66, 66, 66));
         btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnVolver.setForeground(new java.awt.Color(255, 255, 255));
         btnVolver.setText("Volver");
         btnVolver.addActionListener(this::btnVolverActionPerformed);
 
         cmbBuscarClientes.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         cmbBuscarClientes.addActionListener(this::cmbBuscarClientesActionPerformed);
 
+        btnAgregarProducto.setBackground(new java.awt.Color(0, 128, 0));
         btnAgregarProducto.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAgregarProducto.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregarProducto.setText("Agregar P.");
         btnAgregarProducto.addActionListener(this::btnAgregarProductoActionPerformed);
 
+        btnEliminarProducto.setBackground(new java.awt.Color(200, 0, 0));
         btnEliminarProducto.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnEliminarProducto.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminarProducto.setText("Eliminar P.");
         btnEliminarProducto.addActionListener(this::btnEliminarProductoActionPerformed);
+
+        pnlNuevaComanda.setBackground(new java.awt.Color(67, 82, 90));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Comandas — Nueva Comanda");
+
+        javax.swing.GroupLayout pnlNuevaComandaLayout = new javax.swing.GroupLayout(pnlNuevaComanda);
+        pnlNuevaComanda.setLayout(pnlNuevaComandaLayout);
+        pnlNuevaComandaLayout.setHorizontalGroup(
+            pnlNuevaComandaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlNuevaComandaLayout.createSequentialGroup()
+                .addGap(307, 307, 307)
+                .addComponent(jLabel3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlNuevaComandaLayout.setVerticalGroup(
+            pnlNuevaComandaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlNuevaComandaLayout.createSequentialGroup()
+                .addContainerGap(12, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -314,63 +355,63 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnGuardar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCancelar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEntregar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnVolver))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(43, 43, 43)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblProductosEnEstaComanda)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(218, 218, 218)
-                                        .addComponent(jLabel1))
-                                    .addComponent(lblBuscarPorductosParaAgregar)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                .addComponent(jLabel4)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(txtNombreProductos))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                .addComponent(lblFolio)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(txtFolio, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnGuardar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCancelar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnEntregar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnVolver))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 769, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)
+                            .addComponent(lblProductosEnEstaComanda)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAgregarProducto)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnEliminarProducto))
+                            .addComponent(lblBuscarPorductosParaAgregar)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
                                         .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(lblTipo)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(6, 6, 6))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(lblMesa)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(cmbMesasLibres, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel2)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(cmbBuscarClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(btnBuscarProductosParaAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(txtNombreProductos))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(lblFolio)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtFolio, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnAgregarProducto)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lblMesa)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btnEliminarProducto)))
-                                .addGap(0, 134, Short.MAX_VALUE)))))
+                                        .addComponent(cmbMesasLibres, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(33, 33, 33)
+                                        .addComponent(jLabel2)
+                                        .addGap(4, 4, 4)
+                                        .addComponent(cmbBuscarClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(31, 31, 31)
+                                        .addComponent(lblTipo)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnBuscarProductosParaAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap())
+            .addComponent(pnlNuevaComanda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(323, 323, 323)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlNuevaComanda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -381,7 +422,7 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
                         .addComponent(cmbMesasLibres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2)
                         .addComponent(cmbBuscarClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                .addGap(34, 34, 34)
                 .addComponent(lblBuscarPorductosParaAgregar)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -401,10 +442,10 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTotal)
-                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtTotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTotal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -625,6 +666,7 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -636,6 +678,7 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
     private javax.swing.JLabel lblProductosEnEstaComanda;
     private javax.swing.JLabel lblTipo;
     private javax.swing.JLabel lblTotal;
+    private javax.swing.JPanel pnlNuevaComanda;
     private javax.swing.JTextField txtFolio;
     private javax.swing.JTextField txtNombreProductos;
     private javax.swing.JTextField txtTotal;

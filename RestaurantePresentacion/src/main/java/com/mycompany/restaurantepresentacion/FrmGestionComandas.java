@@ -6,10 +6,14 @@ package com.mycompany.restaurantepresentacion;
 
 import com.mycompany.restaurantedominio.Comanda;
 import com.mycompany.restaurantedominio.EstadoComanda;
+import com.mycompany.restaurantenegocio.IClienteBO;
 import com.mycompany.restaurantenegocio.IComandaBO;
 import com.mycompany.restaurantenegocio.IMesaBO;
 import com.mycompany.restaurantenegocio.IProductoBO;
+import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
 import com.mycompany.restaurantenegocio.NegocioException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +32,18 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     private final IComandaBO comandaBO;
     private final IMesaBO mesaBO;
     private final IProductoBO productoBO;
+    private final boolean esMesero;
+    private final IClienteBO clienteBO;
+    private final IReporteClientesFrecuentesBO reporteBO;
     private List<Comanda> listaActual = new ArrayList<>();
     
-    public FrmGestionComandas(IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO) {
+    public FrmGestionComandas(IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO, boolean esMesero, IClienteBO clienteBO, IReporteClientesFrecuentesBO reporteBO) {
         this.comandaBO = comandaBO;
         this.mesaBO = mesaBO;
         this.productoBO = productoBO;
+        this.esMesero = esMesero;
+        this.clienteBO = clienteBO;
+        this.reporteBO = reporteBO;
         initComponents();
         inicializarTabla();
         insertarMesasIniciales();
@@ -139,10 +149,14 @@ public class FrmGestionComandas extends javax.swing.JFrame {
         btnVerYEditar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
+        pnlGestionComandas = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(191, 192, 192));
 
-        lblGestionComandas.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblGestionComandas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblGestionComandas.setForeground(new java.awt.Color(33, 84, 164));
         lblGestionComandas.setText("Gestión de Comandas");
 
         lblBuscarFolioMesa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -153,6 +167,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
 
         cmbEstado.addActionListener(this::cmbEstadoActionPerformed);
 
+        tblComandas.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         tblComandas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -166,76 +181,109 @@ public class FrmGestionComandas extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblComandas);
 
+        btnNuevaComanda.setBackground(new java.awt.Color(0, 128, 0));
         btnNuevaComanda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnNuevaComanda.setForeground(new java.awt.Color(255, 255, 255));
         btnNuevaComanda.setText("+ Nueva Comanda");
         btnNuevaComanda.addActionListener(this::btnNuevaComandaActionPerformed);
 
+        btnInsertarMesas.setBackground(new java.awt.Color(0, 128, 0));
         btnInsertarMesas.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnInsertarMesas.setForeground(new java.awt.Color(255, 255, 255));
         btnInsertarMesas.setText("+ Insertar Mesas");
         btnInsertarMesas.addActionListener(this::btnInsertarMesasActionPerformed);
 
+        btnBuscar.setBackground(new java.awt.Color(23, 117, 209));
         btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(this::btnBuscarActionPerformed);
 
+        btnVerYEditar.setBackground(new java.awt.Color(23, 117, 209));
         btnVerYEditar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnVerYEditar.setForeground(new java.awt.Color(255, 255, 255));
         btnVerYEditar.setText("Ver/Editar");
         btnVerYEditar.addActionListener(this::btnVerYEditarActionPerformed);
 
+        btnCancelar.setBackground(new java.awt.Color(200, 0, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
+        btnVolver.setBackground(new java.awt.Color(66, 66, 66));
         btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnVolver.setForeground(new java.awt.Color(255, 255, 255));
         btnVolver.setText("Volver");
         btnVolver.addActionListener(this::btnVolverActionPerformed);
+
+        pnlGestionComandas.setBackground(new java.awt.Color(67, 82, 90));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Comandas — Gestion de Comandas");
+
+        javax.swing.GroupLayout pnlGestionComandasLayout = new javax.swing.GroupLayout(pnlGestionComandas);
+        pnlGestionComandas.setLayout(pnlGestionComandasLayout);
+        pnlGestionComandasLayout.setHorizontalGroup(
+            pnlGestionComandasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlGestionComandasLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(212, 212, 212))
+        );
+        pnlGestionComandasLayout.setVerticalGroup(
+            pnlGestionComandasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlGestionComandasLayout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(lblBuscarFolioMesa)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtBuscarFolio, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(lblEstado)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnVerYEditar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCancelar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVolver))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnNuevaComanda)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnInsertarMesas))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblGestionComandas)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblBuscarFolioMesa)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtBuscarFolio, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(lblEstado)))
                                 .addGap(18, 18, 18)
                                 .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnBuscar)
-                                .addGap(0, 37, Short.MAX_VALUE))))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(188, 188, 188)
-                            .addComponent(lblGestionComandas))
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnNuevaComanda)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnInsertarMesas)
-                                    .addGap(0, 0, Short.MAX_VALUE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnVerYEditar)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnCancelar)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnVolver))))))
+                                .addComponent(btnBuscar)))
+                        .addGap(0, 37, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addComponent(pnlGestionComandas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlGestionComandas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblGestionComandas)
-                .addGap(12, 12, 12)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevaComanda)
                     .addComponent(btnInsertarMesas))
@@ -253,7 +301,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
                     .addComponent(btnVerYEditar)
                     .addComponent(btnCancelar)
                     .addComponent(btnVolver))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -266,9 +314,9 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
         FrmNuevaComanda frm = new FrmNuevaComanda(comandaBO, mesaBO, productoBO);
         frm.setVisible(true);
-        frm.addWindowListener(new java.awt.event.WindowAdapter() {
+        frm.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
+            public void windowClosed(WindowEvent e) {
                 cargarComandas();
             }
         });
@@ -289,9 +337,9 @@ public class FrmGestionComandas extends javax.swing.JFrame {
         if (sel == null) return;
         FrmNuevaComanda frm = new FrmNuevaComanda(comandaBO, mesaBO, productoBO, sel);
         frm.setVisible(true);
-        frm.addWindowListener(new java.awt.event.WindowAdapter() {
+        frm.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
+            public void windowClosed(WindowEvent e) {
                 cargarComandas();
             }
         });
@@ -319,7 +367,15 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        dispose();
+        if (esMesero) {
+            // Mesero simplemente cierra
+            dispose();
+        } else {
+            // Administrador regresa al menú principal
+            FrmGestionDeComandas frame = new FrmGestionDeComandas(comandaBO, mesaBO, productoBO, clienteBO, null, reporteBO);
+            frame.setVisible(true);
+            dispose();
+        }
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -335,10 +391,12 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     private javax.swing.JButton btnVerYEditar;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cmbEstado;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBuscarFolioMesa;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblGestionComandas;
+    private javax.swing.JPanel pnlGestionComandas;
     private javax.swing.JTable tblComandas;
     private javax.swing.JTextField txtBuscarFolio;
     // End of variables declaration//GEN-END:variables

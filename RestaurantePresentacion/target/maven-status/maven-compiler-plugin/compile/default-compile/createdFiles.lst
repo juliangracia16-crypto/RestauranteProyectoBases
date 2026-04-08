@@ -1,5 +1,6 @@
 com\mycompany\restaurantepresentacion\FrmRegistroCliente$3.class
 com\mycompany\restaurantepresentacion\FrmListaClientes$5.class
+com\mycompany\restaurantepresentacion\FrmGestionClientes$1.class
 com\mycompany\restaurantepresentacion\FrmListaClientes.class
 com\mycompany\restaurantepresentacion\FrmRegistroCliente.class
 com\mycompany\restaurantepresentacion\FrmBuscadorClientes$1$1.class
@@ -7,11 +8,14 @@ com\mycompany\restaurantepresentacion\FrmListaClientes$2.class
 com\mycompany\restaurantepresentacion\FrmBuscadorClientes$1.class
 com\mycompany\restaurantepresentacion\FrmDetalleCliente$2.class
 com\mycompany\restaurantepresentacion\FrmRegistroCliente$1.class
+com\mycompany\restaurantepresentacion\FrmGeneracionReportes.class
 com\mycompany\restaurantepresentacion\FrmGestionComandas$3.class
 com\mycompany\restaurantepresentacion\FrmNuevaComanda$2.class
 com\mycompany\restaurantepresentacion\FrmDetalleCliente$1.class
 com\mycompany\restaurantepresentacion\FrmGestionComandas.class
+com\mycompany\restaurantepresentacion\FrmGestionClientes$3.class
 com\mycompany\restaurantepresentacion\FrmDetalleCliente.class
+com\mycompany\restaurantepresentacion\FrmInicio.class
 com\mycompany\restaurantepresentacion\FrmReporteClientesFrecuentes$1.class
 TestFrames\TestearLosFrames.class
 com\mycompany\restaurantepresentacion\FrmNuevaComanda.class
@@ -22,7 +26,10 @@ com\mycompany\restaurantepresentacion\FrmListaClientes$1.class
 com\mycompany\restaurantepresentacion\FrmReporteClientesFrecuentes.class
 com\mycompany\restaurantepresentacion\FrmGestionComandas$1.class
 com\mycompany\restaurantepresentacion\FrmBuscadorClientes.class
+com\mycompany\restaurantepresentacion\FrmGestionDeComandas.class
 com\mycompany\restaurantepresentacion\FrmGestionComandas$2.class
 com\mycompany\restaurantepresentacion\FrmListaClientes$3.class
 com\mycompany\restaurantepresentacion\FrmRegistroCliente$4.class
+com\mycompany\restaurantepresentacion\FrmGestionClientes$2.class
+com\mycompany\restaurantepresentacion\FrmGestionClientes.class
 com\mycompany\restaurantepresentacion\FrmNuevaComanda$1.class

@@ -5,7 +5,10 @@
 package TestFrames;
 
 
+import com.mycompany.restaurantedominio.ClienteFrecuente;
+import com.mycompany.restaurantenegocio.ClienteBO;
 import com.mycompany.restaurantenegocio.ComandaBO;
+import com.mycompany.restaurantenegocio.IClienteBO;
 import com.mycompany.restaurantenegocio.IComandaBO;
 import com.mycompany.restaurantenegocio.IIngredientesBO;
 import com.mycompany.restaurantenegocio.IMesaBO;
@@ -25,7 +28,10 @@ import com.mycompany.restaurantepersistencia.IProductoDAO;
 import com.mycompany.restaurantepersistencia.IngredientesDAO;
 import com.mycompany.restaurantepersistencia.MesaDAO;
 import com.mycompany.restaurantepersistencia.ProductoDAO;
+import com.mycompany.restaurantepresentacion.FrmGeneracionReportes;
 import com.mycompany.restaurantepresentacion.FrmGestionComandas;
+import com.mycompany.restaurantepresentacion.FrmGestionDeComandas;
+import com.mycompany.restaurantepresentacion.FrmInicio;
 import com.mycompany.restaurantepresentacion.FrmRegistrarNuevoIngrediente;
 import com.mycompany.restaurantepresentacion.FrmReporteClientesFrecuentes;
 
@@ -43,16 +49,15 @@ public class TestearLosFrames {
         IClienteDAO clienteDAO = new ClienteDAO();
         IComandaDAO comandaDAO = new ComandaDAO();
         IMesaDAO mesaDAO = new MesaDAO();
+        IProductoDAO productoDAO = new ProductoDAO();
+
+        IClienteBO clienteBO = new ClienteBO(clienteDAO);
         IComandaBO comandaBO = new ComandaBO(comandaDAO);
         IMesaBO mesaBO = new MesaBO(mesaDAO);
-        IProductoDAO productoDAO = new ProductoDAO();
-        IProductoBO productoBO   = new ProductoBO(productoDAO);
-        IIngredientesDAO ingredientesDAO = new IngredientesDAO();
-        IIngredientesBO ingredientesBO = new IngredientesBO(ingredientesDAO);
+        IProductoBO productoBO = new ProductoBO(productoDAO);
         IReporteClientesFrecuentesBO reporteBO = new ReporteClientesFrecuentesBO(clienteDAO);
-//        FrmGestionComandas frame = new FrmGestionComandas(comandaBO, mesaBO, productoBO);
-//        FrmReporteClientesFrecuentes frame = new FrmReporteClientesFrecuentes(reporteBO);
-        FrmRegistrarNuevoIngrediente frame = new FrmRegistrarNuevoIngrediente(ingredientesBO);
+        
+        FrmInicio frame = new FrmInicio(clienteBO, comandaBO, mesaBO, productoBO, reporteBO);
         frame.setVisible(true);
         
     }
