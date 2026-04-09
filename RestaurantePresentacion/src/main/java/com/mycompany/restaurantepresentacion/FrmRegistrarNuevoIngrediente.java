@@ -53,17 +53,19 @@ public class FrmRegistrarNuevoIngrediente extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblNombreIngrediente.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblNombreIngrediente.setForeground(new java.awt.Color(255, 255, 255));
+        lblNombreIngrediente.setForeground(new java.awt.Color(0, 0, 0));
         lblNombreIngrediente.setText("Nombre del Ingrediente: ");
 
-        txtNombreIngrediente.setForeground(new java.awt.Color(255, 255, 255));
+        txtNombreIngrediente.setForeground(new java.awt.Color(0, 0, 0));
 
         lblStockInicial.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblStockInicial.setForeground(new java.awt.Color(255, 255, 255));
+        lblStockInicial.setForeground(new java.awt.Color(0, 0, 0));
         lblStockInicial.setText("Stock Inicial: ");
 
+        txtStockInicial.setForeground(new java.awt.Color(0, 0, 0));
+
         lblUnidadMedida.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblUnidadMedida.setForeground(new java.awt.Color(255, 255, 255));
+        lblUnidadMedida.setForeground(new java.awt.Color(0, 0, 0));
         lblUnidadMedida.setText("Unidad de Medida: ");
 
         btnRegistrar.setBackground(new java.awt.Color(0, 128, 0));

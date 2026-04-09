@@ -47,7 +47,12 @@ public class Ingrediente implements Serializable {
         this.stock = stock;
         this.unidadMedida = unidadMedida;
     }
-
+    
+    public Ingrediente(String nombre, UnidadMedida unidadMedida){
+        this.nombre = nombre;
+        this.unidadMedida = unidadMedida;
+    }
+    
     public List<ProductoIngrediente> getIngredientes() {
         return ingredientes;
     }

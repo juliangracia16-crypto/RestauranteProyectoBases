@@ -6,6 +6,7 @@ import com.mycompany.restaurantedominio.ManejadorConexiones;
 import com.mycompany.restaurantedtos.ActualizarIngredienteDTO;
 import com.mycompany.restaurantedtos.BuscadorIngredientesDTO;
 import com.mycompany.restaurantedtos.NuevoIngredienteDTO;
+import com.mycompany.restaurantepersistencia.adapters.BuscadorIngredientesDTOAIngredienteAdapter;
 import com.mycompany.restaurantepersistencia.adapters.NuevoIngredienteDTOAIngredienteAdapter;
 import java.util.List;
 import java.util.logging.Logger;
@@ -130,25 +131,26 @@ public class IngredientesDAO implements IIngredientesDAO{
 
     @Override
     public List<Ingrediente> consultarIngredientesFiltrados(BuscadorIngredientesDTO ingredienteFiltrado) throws PersistenciaException {
+        Ingrediente ingredienteFiltradoAdaptado = BuscadorIngredientesDTOAIngredienteAdapter.adaptar(ingredienteFiltrado);
         try{
             EntityManager entityManager = ManejadorConexiones.crearEntityManager();
             StringBuilder jpql = new StringBuilder("SELECT i FROM Ingrediente i WHERE 1=1");
 
-            if (ingredienteFiltrado.getNombre() != null && !ingredienteFiltrado.getNombre().trim().isEmpty()) {
+            if (ingredienteFiltradoAdaptado.getNombre() != null && !ingredienteFiltradoAdaptado.getNombre().trim().isEmpty()) {
                 jpql.append(" AND LOWER(i.nombre) LIKE LOWER(:nombre)");
             }
 
-            if (ingredienteFiltrado.getUnidadMedida() != null) {
+            if (ingredienteFiltradoAdaptado.getUnidadMedida() != null) {
                 jpql.append(" AND i.unidadMedida = :unidadMedida");
             }
 
             TypedQuery<Ingrediente> query = entityManager.createQuery(jpql.toString(), Ingrediente.class);
 
-            if (ingredienteFiltrado.getNombre() != null && !ingredienteFiltrado.getNombre().trim().isEmpty()) {
-                query.setParameter("nombre", "%" + ingredienteFiltrado.getNombre().trim() + "%");
+            if (ingredienteFiltradoAdaptado.getNombre() != null && !ingredienteFiltradoAdaptado.getNombre().trim().isEmpty()) {
+                query.setParameter("nombre", "%" + ingredienteFiltradoAdaptado.getNombre().trim() + "%");
             }
-            if (ingredienteFiltrado.getUnidadMedida() != null) {
-                query.setParameter("unidadMedida", ingredienteFiltrado.getUnidadMedida());
+            if (ingredienteFiltradoAdaptado.getUnidadMedida() != null) {
+                query.setParameter("unidadMedida", ingredienteFiltradoAdaptado.getUnidadMedida());
             }
             return query.getResultList();
         }catch(PersistenceException ex){

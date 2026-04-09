@@ -28,6 +28,7 @@ import com.mycompany.restaurantepersistencia.IProductoDAO;
 import com.mycompany.restaurantepersistencia.IngredientesDAO;
 import com.mycompany.restaurantepersistencia.MesaDAO;
 import com.mycompany.restaurantepersistencia.ProductoDAO;
+import com.mycompany.restaurantepresentacion.FrmBuscadorIngredientes;
 import com.mycompany.restaurantepresentacion.FrmGeneracionReportes;
 import com.mycompany.restaurantepresentacion.FrmGestionComandas;
 import com.mycompany.restaurantepresentacion.FrmGestionDeComandas;
@@ -52,16 +53,20 @@ public class TestearLosFrames {
         IComandaDAO comandaDAO = new ComandaDAO();
         IMesaDAO mesaDAO = new MesaDAO();
         IProductoDAO productoDAO = new ProductoDAO();
-
+        IIngredientesDAO ingredientesDAO = new IngredientesDAO();
+        
         IClienteBO clienteBO = new ClienteBO(clienteDAO);
         IComandaBO comandaBO = new ComandaBO(comandaDAO);
         IMesaBO mesaBO = new MesaBO(mesaDAO);
         IProductoBO productoBO = new ProductoBO(productoDAO);
         IReporteClientesFrecuentesBO reporteBO = new ReporteClientesFrecuentesBO(clienteDAO);
+        IIngredientesBO ingredientesBO = new IngredientesBO(ingredientesDAO);
         
         //FrmInicio frame = new FrmInicio(clienteBO, comandaBO, mesaBO, productoBO, reporteBO);
         //FrmRegistroCliente frame = new FrmRegistroCliente(null,true,(ClienteBO)clienteBO);
-        FrmListaClientes frame = new FrmListaClientes(null,true);
+        //FrmListaClientes frame = new FrmListaClientes(null,true);
+        //FrmBuscadorIngredientes frame = new FrmBuscadorIngredientes(ingredientesBO);
+        FrmRegistrarNuevoIngrediente frame = new FrmRegistrarNuevoIngrediente(ingredientesBO);
         frame.setVisible(true);
         
     }
