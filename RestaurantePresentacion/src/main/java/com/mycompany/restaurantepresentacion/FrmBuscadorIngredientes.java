@@ -3,10 +3,10 @@ package com.mycompany.restaurantepresentacion;
 
 import com.mycompany.restaurantedominio.Ingrediente;
 import com.mycompany.restaurantedtos.BuscadorIngredientesDTO;
-import com.mycompany.restaurantedtos.ReporteClientesFrecuentesDTO;
 import com.mycompany.restaurantedtos.UnidadMedida;
-import com.mycompany.restaurantenegocio.IIngredientesBO;
 import com.mycompany.restaurantenegocio.NegocioException;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
+import interfaces.SeleccionIngredienteListener;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -16,16 +16,25 @@ import javax.swing.table.DefaultTableModel;
  * @author Julian
  */
 public class FrmBuscadorIngredientes extends javax.swing.JFrame {
-    private IIngredientesBO ingredientesBO;
+    private ObjetosBoDTO objetosBO;
+    private SeleccionIngredienteListener listener;
     private List<Ingrediente> ingredientesActuales;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmBuscadorIngredientes.class.getName());
 
     /**
      * Creates new form FrmBuscadorIngredientes
-     * @param ingredientesBO
+     * @param objetosBO
+     * @param listener
      */
-    public FrmBuscadorIngredientes(IIngredientesBO ingredientesBO) {
-        this.ingredientesBO = ingredientesBO;
+    public FrmBuscadorIngredientes(ObjetosBoDTO objetosBO,SeleccionIngredienteListener listener) {
+        this.listener = listener;
+        this.objetosBO = objetosBO;
+        initComponents();
+        this.inicializarTablaLlena();
+        this.llenarComboUnidadMedida();
+    }
+    public FrmBuscadorIngredientes(ObjetosBoDTO objetosBO){
+        this.objetosBO = objetosBO;
         initComponents();
         this.inicializarTablaLlena();
         this.llenarComboUnidadMedida();
@@ -52,7 +61,9 @@ public class FrmBuscadorIngredientes extends javax.swing.JFrame {
         lblUnidadMedida = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        btnVovler = new javax.swing.JButton();
+        btnAgregarAProducto = new javax.swing.JButton();
+        btnSeleccionarIngrediente = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -125,10 +136,22 @@ public class FrmBuscadorIngredientes extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jTable1);
 
-        btnVovler.setBackground(new java.awt.Color(66, 66, 66));
-        btnVovler.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnVovler.setForeground(new java.awt.Color(255, 255, 255));
-        btnVovler.setText("Volver");
+        btnAgregarAProducto.setBackground(new java.awt.Color(0, 128, 0));
+        btnAgregarAProducto.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAgregarAProducto.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarAProducto.setText("Agregar a Pro.");
+
+        btnSeleccionarIngrediente.setBackground(new java.awt.Color(255, 140, 0));
+        btnSeleccionarIngrediente.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSeleccionarIngrediente.setForeground(new java.awt.Color(255, 255, 255));
+        btnSeleccionarIngrediente.setText("Seleccionar Ing.");
+        btnSeleccionarIngrediente.addActionListener(this::btnSeleccionarIngredienteActionPerformed);
+
+        btnVolver.setBackground(new java.awt.Color(66, 66, 66));
+        btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnVolver.setForeground(new java.awt.Color(255, 255, 255));
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(this::btnVolverActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -156,10 +179,15 @@ public class FrmBuscadorIngredientes extends javax.swing.JFrame {
                         .addGap(282, 282, 282)))
                 .addGap(91, 91, 91))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnVovler)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 780, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 780, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnAgregarAProducto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSeleccionarIngrediente)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVolver)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -176,10 +204,13 @@ public class FrmBuscadorIngredientes extends javax.swing.JFrame {
                     .addComponent(btnBuscar)
                     .addComponent(btnRestablecer)
                     .addComponent(lblUnidadMedida))
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnVovler)
+                .addGap(31, 31, 31)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAgregarAProducto)
+                    .addComponent(btnSeleccionarIngrediente)
+                    .addComponent(btnVolver))
                 .addGap(0, 6, Short.MAX_VALUE))
         );
 
@@ -206,13 +237,25 @@ public class FrmBuscadorIngredientes extends javax.swing.JFrame {
     private void btnRestablecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestablecerActionPerformed
         this.inicializarTablaLlena();
     }//GEN-LAST:event_btnRestablecerActionPerformed
+
+    private void btnSeleccionarIngredienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarIngredienteActionPerformed
+        this.seleccionarIngrediente();
+    }//GEN-LAST:event_btnSeleccionarIngredienteActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        this.vaciarForm();
+        this.dispose();
+        FrmSeleccionarOpcionIngrediente frame = new FrmSeleccionarOpcionIngrediente(objetosBO);
+        frame.setVisible(true);
+    }//GEN-LAST:event_btnVolverActionPerformed
     
     private void filtrarIngredientes(){
         try {
             String nombreFiltrado = txtFiltroNombre.getText().trim();
             UnidadMedida unidadMedida = (UnidadMedida) comboUnidadMedida.getSelectedItem();
             BuscadorIngredientesDTO filtrosIngrediente = new BuscadorIngredientesDTO(nombreFiltrado,unidadMedida);
-            this.llenarTabla(ingredientesBO.consultarIngredientesFiltrados(filtrosIngrediente));
+            this.llenarTabla(objetosBO.getIngredientesBO().consultarIngredientesFiltrados(filtrosIngrediente));
+            vaciarForm();
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "Error al llenar tabla con los ingredientes: " + ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
         }
@@ -235,7 +278,7 @@ public class FrmBuscadorIngredientes extends javax.swing.JFrame {
     }
     private void inicializarTablaLlena(){
         try {
-            this.ingredientesActuales = ingredientesBO.consultarIngredientes();
+            this.ingredientesActuales = objetosBO.getIngredientesBO().consultarIngredientes();
             DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
             modelo.setRowCount(0);
             for (Ingrediente ingrediente : ingredientesActuales) {
@@ -247,11 +290,35 @@ public class FrmBuscadorIngredientes extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al llenar tabla con los ingredientes: " + ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
         }
     }
+    private void vaciarForm(){
+        txtFiltroNombre.setText("");
+    }
+    private void seleccionarIngrediente(){
+        try {
+            int fila = jTable1.getSelectedRow();
+            if (fila != -1) {
+                Object valor = jTable1.getValueAt(fila, 0);
+                Long id = Long.valueOf(valor.toString());
+                Ingrediente ingrediente = objetosBO.getIngredientesBO().consultarIngredientePorId(id);
+                if (listener != null) {
+                    listener.ingredienteSeleccionado(ingrediente);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Modo consulta: no hay listener");
+                }
+            }
+        } catch (NegocioException ex) {
+             JOptionPane.showMessageDialog(this, "Error al seleccionar un ingrediente: " + ex.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregarAProducto;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnRestablecer;
-    private javax.swing.JButton btnVovler;
+    private javax.swing.JButton btnSeleccionarIngrediente;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<UnidadMedida> comboUnidadMedida;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

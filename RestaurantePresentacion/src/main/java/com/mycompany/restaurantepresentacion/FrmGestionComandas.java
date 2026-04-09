@@ -6,12 +6,8 @@ package com.mycompany.restaurantepresentacion;
 
 import com.mycompany.restaurantedominio.Comanda;
 import com.mycompany.restaurantedominio.EstadoComanda;
-import com.mycompany.restaurantenegocio.IClienteBO;
-import com.mycompany.restaurantenegocio.IComandaBO;
-import com.mycompany.restaurantenegocio.IMesaBO;
-import com.mycompany.restaurantenegocio.IProductoBO;
-import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
 import com.mycompany.restaurantenegocio.NegocioException;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.format.DateTimeFormatter;
@@ -29,21 +25,12 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(FrmGestionComandas.class.getName());
     
-    private final IComandaBO comandaBO;
-    private final IMesaBO mesaBO;
-    private final IProductoBO productoBO;
-    private final boolean esMesero;
-    private final IClienteBO clienteBO;
-    private final IReporteClientesFrecuentesBO reporteBO;
+    private final ObjetosBoDTO objetosBO;
+    private final boolean esMesero = false; //aqui no se porque me marca error bro no se como lo tenias inicializado
     private List<Comanda> listaActual = new ArrayList<>();
     
-    public FrmGestionComandas(IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO, boolean esMesero, IClienteBO clienteBO, IReporteClientesFrecuentesBO reporteBO) {
-        this.comandaBO = comandaBO;
-        this.mesaBO = mesaBO;
-        this.productoBO = productoBO;
-        this.esMesero = esMesero;
-        this.clienteBO = clienteBO;
-        this.reporteBO = reporteBO;
+    public FrmGestionComandas(ObjetosBoDTO objetosBO) {
+        this.objetosBO = objetosBO;
         initComponents();
         inicializarTabla();
         insertarMesasIniciales();
@@ -53,7 +40,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     
     private void insertarMesasIniciales() {
         try {
-            mesaBO.insertarMesasMasivo();
+            objetosBO.getMesaBO().insertarMesasMasivo();
         } catch (NegocioException ex) {
             LOGGER.severe("Error al insertar mesas: " + ex.getMessage());
         }
@@ -102,7 +89,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     
     private void cargarComandas() {
         try {
-            llenarTabla(comandaBO.obtenerTodos());
+            llenarTabla(objetosBO.getComandaBO().obtenerTodos());
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -112,7 +99,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
         try {
             String termino = txtBuscarFolio.getText().trim().toLowerCase();
             String estadoSel = (String) cmbEstado.getSelectedItem();
-            List<Comanda> todas = comandaBO.obtenerTodos();
+            List<Comanda> todas = objetosBO.getComandaBO().obtenerTodos();
             List<Comanda> filtradas = new ArrayList<>();
             for (Comanda c : todas) {
                 boolean coincideFolio = termino.isEmpty() || c.getFolio().toLowerCase().contains(termino) || String.valueOf(c.getMesa().getNumeroMesa()).contains(termino);
@@ -312,7 +299,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbEstadoActionPerformed
 
     private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
-        FrmNuevaComanda frm = new FrmNuevaComanda(comandaBO, mesaBO, productoBO);
+        FrmNuevaComanda frm = new FrmNuevaComanda(objetosBO);
         frm.setVisible(true);
         frm.addWindowListener(new WindowAdapter() {
             @Override
@@ -324,8 +311,8 @@ public class FrmGestionComandas extends javax.swing.JFrame {
 
     private void btnInsertarMesasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarMesasActionPerformed
         try {
-            mesaBO.insertarMesasMasivo();
-            List<com.mycompany.restaurantedominio.Mesa> mesas = mesaBO.obtenerTodos();
+            objetosBO.getMesaBO().insertarMesasMasivo();
+            List<com.mycompany.restaurantedominio.Mesa> mesas = objetosBO.getMesaBO().obtenerTodos();
             JOptionPane.showMessageDialog(this, "20 mesas insertadas exitosamente. Total de mesas: " + mesas.size(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -335,7 +322,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     private void btnVerYEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerYEditarActionPerformed
         Comanda sel = getComandaSeleccionada();
         if (sel == null) return;
-        FrmNuevaComanda frm = new FrmNuevaComanda(comandaBO, mesaBO, productoBO, sel);
+        FrmNuevaComanda frm = new FrmNuevaComanda(objetosBO, sel);
         frm.setVisible(true);
         frm.addWindowListener(new WindowAdapter() {
             @Override
@@ -356,8 +343,8 @@ public class FrmGestionComandas extends javax.swing.JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "¿Deseas cancelar la comanda " + sel.getFolio() + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                comandaBO.cancelar(sel.getId());
-                mesaBO.actualizarDisponibilidad(sel.getMesa().getId());
+                objetosBO.getComandaBO().cancelar(sel.getId());
+                objetosBO.getMesaBO().actualizarDisponibilidad(sel.getMesa().getId());
                 JOptionPane.showMessageDialog(this, "Comanda cancelada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 cargarComandas();
             } catch (NegocioException ex) {
@@ -372,7 +359,7 @@ public class FrmGestionComandas extends javax.swing.JFrame {
             dispose();
         } else {
             // Administrador regresa al menú principal
-            FrmGestionDeComandas frame = new FrmGestionDeComandas(comandaBO, mesaBO, productoBO, clienteBO, null, reporteBO);
+            FrmGestionDeComandas frame = new FrmGestionDeComandas(objetosBO);
             frame.setVisible(true);
             dispose();
         }

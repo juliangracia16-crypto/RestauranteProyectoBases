@@ -5,12 +5,8 @@
 package com.mycompany.restaurantepresentacion;
 
 import com.mycompany.restaurantedominio.ClienteFrecuente;
-import com.mycompany.restaurantenegocio.ClienteBO;
-import com.mycompany.restaurantenegocio.IComandaBO;
-import com.mycompany.restaurantenegocio.IMesaBO;
-import com.mycompany.restaurantenegocio.IProductoBO;
-import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
 import com.mycompany.restaurantenegocio.NegocioException;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -28,21 +24,13 @@ public class FrmGestionClientes extends javax.swing.JFrame {
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(FrmGestionClientes.class.getName());
     
     private final ClienteFrecuente cliente;
-    private final ClienteBO clienteBO;
-    private final IComandaBO comandaBO;
-    private final IMesaBO mesaBO;
-    private final IProductoBO productoBO;
-    private final IReporteClientesFrecuentesBO reporteBO;
+    private final ObjetosBoDTO objetosBO;
     private ClienteFrecuente clienteSeleccionado = null;
     private List<ClienteFrecuente> listaActual = new ArrayList<>();
 
-    public FrmGestionClientes(ClienteFrecuente cliente, ClienteBO clienteBO, IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO, IReporteClientesFrecuentesBO reporteBO) {
+    public FrmGestionClientes(ClienteFrecuente cliente, ObjetosBoDTO objetosBO) {
         this.cliente    = cliente;
-        this.clienteBO  = clienteBO;
-        this.comandaBO  = comandaBO;
-        this.mesaBO     = mesaBO;
-        this.productoBO = productoBO;
-        this.reporteBO = reporteBO;
+        this.objetosBO = objetosBO;
         initComponents();
         inicializarTabla();
         cargarClientes();
@@ -68,13 +56,13 @@ public class FrmGestionClientes extends javax.swing.JFrame {
 
             // Primero agregamos Cliente General
             try {
-                clienteBO.crear(); // crea o retorna el existente
+                objetosBO.getClienteBO().crear(); // crea o retorna el existente
             } catch (NegocioException ex) {
                 LOGGER.severe(ex.getMessage());
             }
 
             // Llenamos la tabla con frecuentes
-            List<ClienteFrecuente> frecuentes = clienteBO.obtenerTodos();
+            List<ClienteFrecuente> frecuentes = objetosBO.getClienteBO().obtenerTodos();
             llenarTabla(frecuentes);
 
             // Agregamos fila de Cliente General al final
@@ -325,7 +313,7 @@ public class FrmGestionClientes extends javax.swing.JFrame {
 
         // Si es Cliente Frecuente
         ClienteFrecuente sel = listaActual.get(fila);
-        FrmRegistroCliente frame = new FrmRegistroCliente(this, true, clienteBO, sel);
+        FrmRegistroCliente frame = new FrmRegistroCliente(this, true, objetosBO, sel);
         frame.setVisible(true);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -336,7 +324,7 @@ public class FrmGestionClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        FrmGestionDeComandas frame = new FrmGestionDeComandas(comandaBO, mesaBO, productoBO, clienteBO, cliente, reporteBO);
+        FrmGestionDeComandas frame = new FrmGestionDeComandas(objetosBO);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
@@ -348,7 +336,7 @@ public class FrmGestionClientes extends javax.swing.JFrame {
                 cargarClientes();
                 return;
             }
-            List<ClienteFrecuente> todos = clienteBO.obtenerTodos();
+            List<ClienteFrecuente> todos = objetosBO.getClienteBO().obtenerTodos();
             List<ClienteFrecuente> filtrados = new ArrayList<>();
             for (ClienteFrecuente cf : todos) {
                 boolean coincide = cf.getNombre().toLowerCase().contains(termino) || (cf.getTelefono() != null && cf.getTelefono().contains(termino)) || (cf.getCorreo() != null && cf.getCorreo().toLowerCase().contains(termino));
@@ -364,7 +352,7 @@ public class FrmGestionClientes extends javax.swing.JFrame {
 
     private void btnRegistrarClienteGeneralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarClienteGeneralActionPerformed
         try {
-            clienteBO.crear();
+            objetosBO.getClienteBO().crear();
             JOptionPane.showMessageDialog(this, "Cliente General registrado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -372,7 +360,7 @@ public class FrmGestionClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistrarClienteGeneralActionPerformed
 
     private void btnNuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoClienteActionPerformed
-        FrmRegistroCliente frame = new FrmRegistroCliente(this, true, clienteBO, null);
+        FrmRegistroCliente frame = new FrmRegistroCliente(this, true, objetosBO, null);
         frame.setVisible(true);
         frame.addWindowListener(new WindowAdapter() {
             @Override

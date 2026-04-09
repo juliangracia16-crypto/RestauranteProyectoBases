@@ -5,12 +5,8 @@
 package com.mycompany.restaurantepresentacion;
 
 import com.mycompany.restaurantedominio.ClienteFrecuente;
-import com.mycompany.restaurantenegocio.ClienteBO;
-import com.mycompany.restaurantenegocio.IClienteBO;
-import com.mycompany.restaurantenegocio.IComandaBO;
-import com.mycompany.restaurantenegocio.IMesaBO;
-import com.mycompany.restaurantenegocio.IProductoBO;
-import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
+import interfaces.SeleccionIngredienteListener;
 
 /**
  *
@@ -19,23 +15,14 @@ import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
 public class FrmGestionDeComandas extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(FrmGestionDeComandas.class.getName());
-    private final ClienteFrecuente cliente;
-    private final IClienteBO clienteBO;
-    private final IComandaBO comandaBO;
-    private final IMesaBO mesaBO;
-    private final IProductoBO productoBO;
-    private final IReporteClientesFrecuentesBO reporteBO;
+    private final ClienteFrecuente cliente = null; //no se aqui bro si lo usas o no
+    private final ObjetosBoDTO objetosBO;
 
     /**
      * Creates new form FrmGestionDeComandas
      */
-    public FrmGestionDeComandas(IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO, IClienteBO clienteBO, ClienteFrecuente cliente, IReporteClientesFrecuentesBO reporteBO) {
-        this.reporteBO = reporteBO;
-        this.cliente = cliente;
-        this.clienteBO = clienteBO;
-        this.comandaBO = comandaBO;
-        this.mesaBO = mesaBO;
-        this.productoBO = productoBO;
+    public FrmGestionDeComandas(ObjetosBoDTO objetosBO) {
+        this.objetosBO = objetosBO;
         initComponents();
     }
 
@@ -162,13 +149,13 @@ public class FrmGestionDeComandas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnComandasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComandasActionPerformed
-        FrmGestionComandas frame = new FrmGestionComandas(comandaBO, mesaBO, productoBO, false, clienteBO, reporteBO);
+        FrmGestionComandas frame = new FrmGestionComandas(objetosBO);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnComandasActionPerformed
 
     private void btnClientesFrecuentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesFrecuentesActionPerformed
-       FrmGestionClientes frame = new FrmGestionClientes(cliente, (ClienteBO) clienteBO, comandaBO, mesaBO, productoBO, reporteBO);
+       FrmGestionClientes frame = new FrmGestionClientes(cliente, objetosBO);
        frame.setVisible(true);
        dispose();
     }//GEN-LAST:event_btnClientesFrecuentesActionPerformed
@@ -178,11 +165,13 @@ public class FrmGestionDeComandas extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnIngredientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngredientesActionPerformed
-        // TODO add your handling code here:
+        FrmSeleccionarOpcionIngrediente frame = new FrmSeleccionarOpcionIngrediente(objetosBO);
+        frame.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnIngredientesActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
-        FrmGeneracionReportes frame = new FrmGeneracionReportes(reporteBO, comandaBO, mesaBO, productoBO, clienteBO);
+        FrmGeneracionReportes frame = new FrmGeneracionReportes(objetosBO);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnReportesActionPerformed

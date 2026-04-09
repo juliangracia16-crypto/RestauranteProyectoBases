@@ -20,6 +20,7 @@ import com.mycompany.restaurantenegocio.IMesaBO;
 import com.mycompany.restaurantenegocio.IProductoBO;
 import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
 import com.mycompany.restaurantenegocio.NegocioException;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -37,19 +38,11 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(FrmReporteClientesFrecuentes.class.getName());
     
-    private final IReporteClientesFrecuentesBO reporteBO;
-    private final IClienteBO clienteBO;
-    private final IComandaBO comandaBO;
-    private final IMesaBO mesaBO;
-    private final IProductoBO productoBO;
+    private final ObjetosBoDTO objetosBO;
     private List<ReporteClientesFrecuentesDTO> listaActual = new ArrayList<>();
     
-    public FrmReporteClientesFrecuentes(IReporteClientesFrecuentesBO reporteBO, IClienteBO clienteBO, IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO) {
-        this.reporteBO = reporteBO;
-        this.clienteBO = clienteBO;
-        this.comandaBO = comandaBO;
-        this.mesaBO = mesaBO;
-        this.productoBO = productoBO;
+    public FrmReporteClientesFrecuentes(ObjetosBoDTO objetosBO) {
+        this.objetosBO = objetosBO;
         initComponents();
         inicializarTabla();
         cargarReporte();
@@ -69,7 +62,7 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
 
     private void cargarReporte() {
         try {
-            llenarTabla(reporteBO.obtenerReporte());
+            llenarTabla(objetosBO.getReporteBO().obtenerReporte());
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -254,7 +247,7 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
 
             if (!nombre.isEmpty() && !visitasStr.isEmpty()) {
                 // Filtra por ambos
-                List<ReporteClientesFrecuentesDTO> porNombre = reporteBO.filtrarPorNombre(nombre);
+                List<ReporteClientesFrecuentesDTO> porNombre = objetosBO.getReporteBO().filtrarPorNombre(nombre);
                 List<ReporteClientesFrecuentesDTO> filtrados = new ArrayList<>();
                 int minVisitas = Integer.parseInt(visitasStr);
                 for (ReporteClientesFrecuentesDTO dto : porNombre) {
@@ -264,9 +257,9 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
                 }
                 llenarTabla(filtrados);
             } else if (!nombre.isEmpty()) {
-                llenarTabla(reporteBO.filtrarPorNombre(nombre));
+                llenarTabla(objetosBO.getReporteBO().filtrarPorNombre(nombre));
             } else if (!visitasStr.isEmpty()) {
-                llenarTabla(reporteBO.filtrarPorMinimoVisitas(Integer.parseInt(visitasStr)));
+                llenarTabla(objetosBO.getReporteBO().filtrarPorMinimoVisitas(Integer.parseInt(visitasStr)));
             } else {
                 cargarReporte();
             }
@@ -397,7 +390,7 @@ public class FrmReporteClientesFrecuentes extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExportarClienteSeleccionadoActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        FrmGeneracionReportes frame = new FrmGeneracionReportes(reporteBO, comandaBO, mesaBO, productoBO, clienteBO);
+        FrmGeneracionReportes frame = new FrmGeneracionReportes(objetosBO);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed

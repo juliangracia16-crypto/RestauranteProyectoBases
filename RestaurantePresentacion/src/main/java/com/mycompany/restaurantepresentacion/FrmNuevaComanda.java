@@ -12,10 +12,8 @@ import com.mycompany.restaurantedominio.Mesa;
 import com.mycompany.restaurantedominio.Producto;
 import com.mycompany.restaurantedominio.TipoProducto;
 import com.mycompany.restaurantedtos.ComandaDTO;
-import com.mycompany.restaurantenegocio.IComandaBO;
-import com.mycompany.restaurantenegocio.IMesaBO;
-import com.mycompany.restaurantenegocio.IProductoBO;
 import com.mycompany.restaurantenegocio.NegocioException;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 import com.mycompany.restaurantepersistencia.ClienteDAO;
 import com.mycompany.restaurantepersistencia.PersistenciaException;
 import java.util.ArrayList;
@@ -32,18 +30,14 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(FrmNuevaComanda.class.getName());
     
-    private final IComandaBO comandaBO;
-    private final IMesaBO mesaBO;
-    private final IProductoBO productoBO;
+    private final ObjetosBoDTO objetosBO;
     private Comanda comandaEditar;
     private List<Mesa> listaMesas = new ArrayList<>();
     private static final String[] COLUMNA_PRODUCTOS = {"Producto", "Precio", "Tipo", "Disponible", "Ingredientes OK"};
     private static final String[] COLUMNA_COMANDA   = {"Producto", "Cant.", "P.Unit", "Subtotal", "Comentario"};
     
-    public FrmNuevaComanda(IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO) {
-        this.comandaBO  = comandaBO;
-        this.mesaBO = mesaBO;
-        this.productoBO = productoBO;
+    public FrmNuevaComanda(ObjetosBoDTO objetosBO) {
+        this.objetosBO = objetosBO;
         this.comandaEditar = null;
         initComponents();
         inicializarTablas();
@@ -57,10 +51,8 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
         cargarTodosLosProductos();
     }
     
-    public FrmNuevaComanda(IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO, Comanda comanda) {
-        this.comandaBO = comandaBO;
-        this.mesaBO = mesaBO;
-        this.productoBO = productoBO;
+    public FrmNuevaComanda(ObjetosBoDTO objetosBO, Comanda comanda) {
+        this.objetosBO = objetosBO;
         this.comandaEditar = comanda;
         initComponents();
         inicializarTablas();
@@ -72,7 +64,7 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
     
     private void cargarTodosLosProductos() {
         try {
-            List<Producto> todos = productoBO.obtenerTodos();
+            List<Producto> todos = objetosBO.getProductoBO().obtenerTodos();
             llenarTablaProductos(todos);
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -100,7 +92,7 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
     private void cargarMesasLibres() {
         try {
             cmbMesasLibres.removeAllItems();
-            listaMesas = mesaBO.obtenerMesasLibres();
+            listaMesas = objetosBO.getMesaBO().obtenerMesasLibres();
             for (Mesa m : listaMesas) {
                 cmbMesasLibres.addItem("Mesa " + m.getNumeroMesa() + " (libre)");
             }
@@ -468,9 +460,9 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "¿Deseas marcar la comanda como Entregada?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                comandaBO.entregar(comandaEditar.getId());
+                objetosBO.getComandaBO().entregar(comandaEditar.getId());
                 //Mesa regresa a LIBRE
-                mesaBO.actualizarDisponibilidad(comandaEditar.getMesa().getId());
+                objetosBO.getMesaBO().actualizarDisponibilidad(comandaEditar.getMesa().getId());
                 JOptionPane.showMessageDialog(this, "Comanda entregada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } catch (NegocioException ex) {
@@ -508,20 +500,20 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
 
             if (comandaEditar == null) {
                 ComandaDTO dto = new ComandaDTO(mesaSeleccionada.getId(), idCliente);
-                Comanda nueva = comandaBO.crear(dto);
+                Comanda nueva = objetosBO.getComandaBO().crear(dto);
                 this.comandaEditar = nueva;
                 txtFolio.setText(nueva.getFolio());
-                mesaBO.actualizarDisponibilidad(mesaSeleccionada.getId());
+                objetosBO.getMesaBO().actualizarDisponibilidad(mesaSeleccionada.getId());
                 // Actualizamos el total si ya hay productos
                 if (totalActual > 0) {
                     ComandaDTO dtoActualizar = new ComandaDTO(totalActual);
-                    comandaBO.actualizar(nueva.getId(), dtoActualizar);
+                    objetosBO.getComandaBO().actualizar(nueva.getId(), dtoActualizar);
                 }
                 JOptionPane.showMessageDialog(this, "Comanda guardada con folio: " + nueva.getFolio(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 // Actualizar con el total de jTable2
                 ComandaDTO dto = new ComandaDTO(totalActual);
-                comandaBO.actualizar(comandaEditar.getId(), dto);
+                objetosBO.getComandaBO().actualizar(comandaEditar.getId(), dto);
                 JOptionPane.showMessageDialog(this, "Comanda actualizada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
             cargarDatosComanda(comandaEditar);
@@ -540,9 +532,9 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "¿Deseas cancelar la comanda " + comandaEditar.getFolio() + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                comandaBO.cancelar(comandaEditar.getId());
+                objetosBO.getComandaBO().cancelar(comandaEditar.getId());
                 //Mesa regresa a LIBRE
-                mesaBO.actualizarDisponibilidad(comandaEditar.getMesa().getId());
+                objetosBO.getMesaBO().actualizarDisponibilidad(comandaEditar.getMesa().getId());
                 JOptionPane.showMessageDialog(this, "Comanda cancelada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } catch (NegocioException ex) {
@@ -563,7 +555,7 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
         try {
             String nombre = txtNombreProductos.getText().trim();
             String tipoSel = (String) cmbTipo.getSelectedItem();
-            List<Producto> todos = productoBO.obtenerTodos();
+            List<Producto> todos = objetosBO.getProductoBO().obtenerTodos();
             List<Producto> filtrados = new ArrayList<>();
             for (Producto p : todos) {
                 boolean coincideNombre = nombre.isEmpty() || p.getNombre().toLowerCase().contains(nombre.toLowerCase());

@@ -16,6 +16,7 @@ import com.mycompany.restaurantenegocio.IProductoBO;
 import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
 import com.mycompany.restaurantenegocio.IngredientesBO;
 import com.mycompany.restaurantenegocio.MesaBO;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 import com.mycompany.restaurantenegocio.ProductoBO;
 import com.mycompany.restaurantenegocio.ReporteClientesFrecuentesBO;
 import com.mycompany.restaurantepersistencia.ClienteDAO;
@@ -62,11 +63,8 @@ public class TestearLosFrames {
         IReporteClientesFrecuentesBO reporteBO = new ReporteClientesFrecuentesBO(clienteDAO);
         IIngredientesBO ingredientesBO = new IngredientesBO(ingredientesDAO);
         
-        //FrmInicio frame = new FrmInicio(clienteBO, comandaBO, mesaBO, productoBO, reporteBO);
-        //FrmRegistroCliente frame = new FrmRegistroCliente(null,true,(ClienteBO)clienteBO);
-        //FrmListaClientes frame = new FrmListaClientes(null,true);
-        //FrmBuscadorIngredientes frame = new FrmBuscadorIngredientes(ingredientesBO);
-        FrmRegistrarNuevoIngrediente frame = new FrmRegistrarNuevoIngrediente(ingredientesBO);
+        ObjetosBoDTO objetosBO = new ObjetosBoDTO(clienteBO, comandaBO,mesaBO, productoBO,reporteBO,ingredientesBO);
+        FrmInicio frame = new FrmInicio(objetosBO);
         frame.setVisible(true);
         
     }

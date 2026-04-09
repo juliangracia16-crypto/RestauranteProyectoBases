@@ -1,3 +1,4 @@
+com\mycompany\restaurantenegocio\ObjetosBoDTO.class
 Excepciones\NegocioException.class
 com\mycompany\restaurantenegocio\IComandaBO.class
 com\mycompany\restaurantenegocio\IProductoBO.class

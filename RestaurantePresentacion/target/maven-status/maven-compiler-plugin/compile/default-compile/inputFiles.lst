@@ -1,6 +1,8 @@
+C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmAgregarStockIngrediente.java
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmBuscadorClientes.java
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmBuscadorIngredientes.java
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmDetalleCliente.java
+C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmEliminarIngrediente.java
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmGeneracionReportes.java
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmGestionClientes.java
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmGestionComandas.java
@@ -11,4 +13,6 @@ C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePr
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmRegistrarNuevoIngrediente.java
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmRegistroCliente.java
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmReporteClientesFrecuentes.java
+C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\com\mycompany\restaurantepresentacion\FrmSeleccionarOpcionIngrediente.java
+C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\interfaces\SeleccionIngredienteListener.java
 C:\Users\Julian\OneDrive\Documents\GitHub\RestauranteProyectoBases\RestaurantePresentacion\src\main\java\TestFrames\TestearLosFrames.java

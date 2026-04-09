@@ -4,8 +4,8 @@ package com.mycompany.restaurantepresentacion;
 import com.mycompany.restaurantedominio.Ingrediente;
 import com.mycompany.restaurantedtos.NuevoIngredienteDTO;
 import com.mycompany.restaurantedtos.UnidadMedida;
-import com.mycompany.restaurantenegocio.IIngredientesBO;
 import com.mycompany.restaurantenegocio.NegocioException;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,14 +15,13 @@ import javax.swing.JOptionPane;
 public class FrmRegistrarNuevoIngrediente extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmRegistrarNuevoIngrediente.class.getName());
-    private final IIngredientesBO ingredientesBO;
-    
+    private final ObjetosBoDTO objetosBO;
     /**
      * Creates new form FrmRegistrarNuevoIngrediente
-     * @param ingredientesBO
+     * @param objetosBO
      */
-    public FrmRegistrarNuevoIngrediente(IIngredientesBO ingredientesBO) {
-        this.ingredientesBO = ingredientesBO;
+    public FrmRegistrarNuevoIngrediente(ObjetosBoDTO objetosBO) {
+        this.objetosBO = objetosBO;
         initComponents();
         llenarComboUnidadMedida();
         
@@ -183,6 +182,8 @@ public class FrmRegistrarNuevoIngrediente extends javax.swing.JFrame {
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         this.vaciarForm();
         this.dispose();
+        FrmSeleccionarOpcionIngrediente frame = new FrmSeleccionarOpcionIngrediente(objetosBO);
+        frame.setVisible(true);
     }//GEN-LAST:event_btnVolverActionPerformed
     
     private void llenarComboUnidadMedida(){
@@ -202,7 +203,7 @@ public class FrmRegistrarNuevoIngrediente extends javax.swing.JFrame {
             Integer stockInicial = Integer.valueOf(txtStockInicial.getText());
             UnidadMedida unidadMedida = (UnidadMedida) comboUnidadMedida.getSelectedItem();
             NuevoIngredienteDTO ingrediente = new NuevoIngredienteDTO(nombre.trim(),stockInicial,unidadMedida);
-            Ingrediente ingredienteRegistrado = ingredientesBO.registrarIngrediente(ingrediente);
+            Ingrediente ingredienteRegistrado = objetosBO.getIngredientesBO().registrarIngrediente(ingrediente);
             String mensaje = """
                             ¡Ingrediente Registrado Correctamente!
                              ID Ingrediente:  """+ingredienteRegistrado.getId()+

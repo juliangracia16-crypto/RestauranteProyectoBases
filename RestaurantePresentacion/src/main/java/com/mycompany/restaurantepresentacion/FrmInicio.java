@@ -9,6 +9,7 @@ import com.mycompany.restaurantenegocio.IComandaBO;
 import com.mycompany.restaurantenegocio.IMesaBO;
 import com.mycompany.restaurantenegocio.IProductoBO;
 import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 
 /**
  *
@@ -17,22 +18,14 @@ import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
 public class FrmInicio extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(FrmInicio.class.getName());
-    private final IClienteBO clienteBO;
-    private final IComandaBO comandaBO;
-    private final IMesaBO mesaBO;
-    private final IProductoBO productoBO;
-    private final IReporteClientesFrecuentesBO reporteBO;
+    private final ObjetosBoDTO objetosBO;
 
     /**
      * Creates new form FrmInicio
      */
     
-    public FrmInicio(IClienteBO clienteBO, IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO, IReporteClientesFrecuentesBO reporteBO) {
-        this.clienteBO = clienteBO;
-        this.comandaBO = comandaBO;
-        this.mesaBO = mesaBO;
-        this.productoBO = productoBO;
-        this.reporteBO = reporteBO;
+    public FrmInicio(ObjetosBoDTO objetosBO) {
+        this.objetosBO = objetosBO;
         initComponents();
     }
 
@@ -129,13 +122,13 @@ public class FrmInicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMeseroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMeseroActionPerformed
-        FrmGestionComandas frame = new FrmGestionComandas(comandaBO, mesaBO, productoBO, true, clienteBO, reporteBO);
+        FrmGestionComandas frame = new FrmGestionComandas(objetosBO);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnMeseroActionPerformed
 
     private void btnAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministradorActionPerformed
-        FrmGestionDeComandas frame = new FrmGestionDeComandas(comandaBO, mesaBO, productoBO, clienteBO, null, reporteBO);
+        FrmGestionDeComandas frame = new FrmGestionDeComandas(objetosBO);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnAdministradorActionPerformed

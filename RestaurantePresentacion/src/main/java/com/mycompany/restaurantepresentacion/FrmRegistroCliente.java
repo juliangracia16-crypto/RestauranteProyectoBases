@@ -2,8 +2,8 @@ package com.mycompany.restaurantepresentacion;
 
 import com.mycompany.restaurantedominio.ClienteFrecuente;
 import com.mycompany.restaurantedtos.ClienteFrecuenteDTO;
-import com.mycompany.restaurantenegocio.ClienteBO;
 import com.mycompany.restaurantenegocio.NegocioException;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
@@ -12,13 +12,13 @@ public class FrmRegistroCliente extends javax.swing.JDialog {
 
     // ── Atributos ─────────────────────────────────────────────────────────────
     private ClienteFrecuente clienteEditar;
-    private final ClienteBO clienteBO;
+    private final ObjetosBoDTO objetosBO;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     // ── Constructor NUEVO ─────────────────────────────────────────────────────
-    public FrmRegistroCliente(java.awt.Frame parent, boolean modal, ClienteBO clienteBO) {
+    public FrmRegistroCliente(java.awt.Frame parent, boolean modal, ObjetosBoDTO objetosBO) {
         super(parent, modal);
-        this.clienteBO = clienteBO;
+        this.objetosBO = objetosBO;
         this.clienteEditar = null;
         initComponents();
         configurarModo();
@@ -26,9 +26,9 @@ public class FrmRegistroCliente extends javax.swing.JDialog {
     }
 
     // ── Constructor EDITAR ────────────────────────────────────────────────────
-    public FrmRegistroCliente(java.awt.Frame parent, boolean modal, ClienteBO clienteBO, ClienteFrecuente cliente) {
+    public FrmRegistroCliente(java.awt.Frame parent, boolean modal, ObjetosBoDTO objetosBO, ClienteFrecuente cliente) {
         super(parent, modal);
-        this.clienteBO = clienteBO;
+        this.objetosBO = objetosBO;
         this.clienteEditar = cliente;
         initComponents();
         configurarModo();
@@ -68,10 +68,10 @@ public class FrmRegistroCliente extends javax.swing.JDialog {
 
         try {
             if (clienteEditar == null) {
-                clienteBO.crear(new ClienteFrecuenteDTO(nombre, telefono, correo));
+                objetosBO.getClienteBO().crear(new ClienteFrecuenteDTO(nombre, telefono, correo));
                 JOptionPane.showMessageDialog(this, "Cliente registrado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                clienteBO.actualizar(new ClienteFrecuenteDTO(clienteEditar.getIdCliente(), nombre, telefono, correo));
+                objetosBO.getClienteBO().actualizar(new ClienteFrecuenteDTO(clienteEditar.getIdCliente(), nombre, telefono, correo));
                 JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
             dispose();

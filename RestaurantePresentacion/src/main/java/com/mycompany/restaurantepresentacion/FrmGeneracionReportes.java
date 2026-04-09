@@ -4,12 +4,7 @@
  */
 package com.mycompany.restaurantepresentacion;
 
-import com.mycompany.restaurantedominio.ClienteFrecuente;
-import com.mycompany.restaurantenegocio.IClienteBO;
-import com.mycompany.restaurantenegocio.IComandaBO;
-import com.mycompany.restaurantenegocio.IMesaBO;
-import com.mycompany.restaurantenegocio.IProductoBO;
-import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
+import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 
 /**
  *
@@ -19,21 +14,13 @@ public class FrmGeneracionReportes extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(FrmGeneracionReportes.class.getName());
     
-    private final IReporteClientesFrecuentesBO reporteBO;
-    private final IComandaBO comandaBO;
-    private final IMesaBO mesaBO;
-    private final IProductoBO productoBO;
-    private final IClienteBO clienteBO;
+    private final ObjetosBoDTO objetosBO;
 
     /**
      * Creates new form FrmGeneracionReportes
      */
-    public FrmGeneracionReportes(IReporteClientesFrecuentesBO reporteBO, IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO, IClienteBO clienteBO) {
-        this.reporteBO = reporteBO;
-        this.comandaBO = comandaBO;
-        this.mesaBO = mesaBO;
-        this.productoBO = productoBO;
-        this.clienteBO = clienteBO;
+    public FrmGeneracionReportes(ObjetosBoDTO objetosBO) {
+        this.objetosBO = objetosBO;
         initComponents();
     }
 
@@ -149,13 +136,13 @@ public class FrmGeneracionReportes extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReporteComandasActionPerformed
 
     private void btnReportesClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesClientesActionPerformed
-        FrmReporteClientesFrecuentes frame = new FrmReporteClientesFrecuentes(reporteBO, clienteBO, comandaBO, mesaBO, productoBO);
+        FrmReporteClientesFrecuentes frame = new FrmReporteClientesFrecuentes(objetosBO);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnReportesClientesActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        FrmGestionDeComandas frame = new FrmGestionDeComandas(comandaBO, mesaBO, productoBO, clienteBO, null, reporteBO);
+        FrmGestionDeComandas frame = new FrmGestionDeComandas(objetosBO);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
