@@ -17,4 +17,5 @@ public interface IClienteBO {
     public abstract ClienteFrecuente buscarPorId(Long id) throws NegocioException;
     public abstract List<ClienteFrecuente> obtenerTodos() throws NegocioException;
     public abstract ClienteGeneral crear() throws NegocioException;
+    public abstract ClienteGeneral buscarClienteGeneral() throws NegocioException;
 }

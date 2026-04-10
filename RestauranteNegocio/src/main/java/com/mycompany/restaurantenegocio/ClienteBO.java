@@ -134,4 +134,15 @@ public class ClienteBO implements IClienteBO{
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return correo.matches(regex);
     }
+
+    @Override
+    public ClienteGeneral buscarClienteGeneral() throws NegocioException {
+        try {
+            return clienteDAO.obtenerClienteGeneral();
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al obtener el Cliente General.", ex);
+        }
+    }
+    
+    
 }

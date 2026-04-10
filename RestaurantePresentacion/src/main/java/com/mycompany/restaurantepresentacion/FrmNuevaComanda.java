@@ -8,9 +8,13 @@ import com.mycompany.restaurantedominio.ClienteFrecuente;
 import com.mycompany.restaurantedominio.ClienteGeneral;
 import com.mycompany.restaurantedominio.Comanda;
 import com.mycompany.restaurantedominio.EstadoComanda;
+import com.mycompany.restaurantedominio.Ingrediente;
 import com.mycompany.restaurantedominio.Mesa;
 import com.mycompany.restaurantedominio.Producto;
+import com.mycompany.restaurantedominio.ProductoIngrediente;
+import com.mycompany.restaurantedominio.ProductoSeleccionado;
 import com.mycompany.restaurantedominio.TipoProducto;
+import com.mycompany.restaurantedtos.ActualizarIngredienteDTO;
 import com.mycompany.restaurantedtos.ComandaDTO;
 import com.mycompany.restaurantenegocio.NegocioException;
 import com.mycompany.restaurantenegocio.ObjetosBoDTO;
@@ -60,6 +64,35 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
         cargarClientes();
         cargarDatosComanda(comanda);
         txtTotal.setEditable(false);
+    }
+    
+    private void guardarProductosSeleccionados(Comanda comanda) {
+        try {
+            DefaultTableModel modeloTabla = (DefaultTableModel) jTable2.getModel();
+            List<Producto> todosProductos = objetosBO.getProductoBO().obtenerTodos();
+
+            for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+                String nombreProducto = modeloTabla.getValueAt(i, 0).toString();
+                int cantidad = Integer.parseInt(modeloTabla.getValueAt(i, 1).toString());
+                double precioUnitario = Double.parseDouble(modeloTabla.getValueAt(i, 2).toString());
+                String comentario = modeloTabla.getValueAt(i, 4).toString();
+
+                // Buscamos el producto por nombre
+                Producto productoEncontrado = null;
+                for (Producto p : todosProductos) {
+                    if (p.getNombre().equals(nombreProducto)) {
+                        productoEncontrado = p;
+                        break;
+                    }
+                }
+
+                if (productoEncontrado != null) {
+                    objetosBO.getProductoSeleccionadoBO().agregar(comanda,productoEncontrado,cantidad,precioUnitario,comentario);
+                }
+            }
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     private void cargarTodosLosProductos() {
@@ -122,8 +155,7 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
         cmbMesasLibres.addItem("Mesa " + comanda.getMesa().getNumeroMesa() + " (actual)");
         cmbMesasLibres.setSelectedItem("Mesa " + comanda.getMesa().getNumeroMesa() + " (actual)");
 
-        if (comanda.getEstado() == EstadoComanda.ENTREGADA ||
-            comanda.getEstado() == EstadoComanda.CANCELADA) {
+        if (comanda.getEstado() == EstadoComanda.ENTREGADA || comanda.getEstado() == EstadoComanda.CANCELADA) {
             btnGuardar.setEnabled(false);
             btnEntregar.setEnabled(false);
             cmbMesasLibres.setEnabled(false);
@@ -146,8 +178,7 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
                 cmbBuscarClientes.addItem(cf.getNombre() + " - " + cf.getTelefono());
             }
         } catch (PersistenciaException ex) {
-            JOptionPane.showMessageDialog(this,
-                ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -458,16 +489,75 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
             return;
         }
         int confirm = JOptionPane.showConfirmDialog(this, "¿Deseas marcar la comanda como Entregada?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                objetosBO.getComandaBO().entregar(comandaEditar.getId());
-                //Mesa regresa a LIBRE
-                objetosBO.getMesaBO().actualizarDisponibilidad(comandaEditar.getMesa().getId());
-                JOptionPane.showMessageDialog(this, "Comanda entregada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                dispose();
-            } catch (NegocioException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            // Obtener los productos seleccionados de la comanda
+            List<ProductoSeleccionado> productos = objetosBO.getProductoSeleccionadoBO().obtenerPorComanda(comandaEditar.getId());
+
+            if (productos.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "La comanda no tiene productos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
             }
+
+            // Asegurarnos de tener los ingredientes cargados
+            List<Producto> todosProductos = objetosBO.getProductoBO().obtenerTodos();
+
+            for (ProductoSeleccionado ps : productos) {
+                if (ps.getProducto().getIngredientes() == null || ps.getProducto().getIngredientes().isEmpty()) {
+                    for (Producto pCompleto : todosProductos) {
+                        if (pCompleto.getId().equals(ps.getProducto().getId())) {
+                            ps.getProducto().setIngredientes(pCompleto.getIngredientes());
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Validar stock ANTES de descontar
+            StringBuilder erroresStock = new StringBuilder();
+            for (ProductoSeleccionado ps : productos) {
+                if (ps.getProducto().getIngredientes() == null) continue;
+                for (ProductoIngrediente pi : ps.getProducto().getIngredientes()) {
+                    int cantidadNecesaria = pi.getCantidad() * ps.getCantidad();
+                    // Consultar el stock fresco desde la BD
+                    Ingrediente ingredienteFresco = objetosBO.getIngredientesBO().consultarIngredientePorId(pi.getIngrediente().getId());
+                    int stockActual = ingredienteFresco.getStock();
+
+                    if (stockActual < cantidadNecesaria) {
+                        erroresStock.append("- ").append(ingredienteFresco.getNombre()).append(": necesitas ").append(cantidadNecesaria).append(", hay ").append(stockActual).append("\n");
+                    }
+                }
+            }
+
+            if (erroresStock.length() > 0) {
+                JOptionPane.showMessageDialog(this, "No se puede entregar. Stock insuficiente:\n" + erroresStock.toString(), "Error de Stock", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Todo OK = Descontar ingredientes
+            for (ProductoSeleccionado ps : productos) {
+                if (ps.getProducto().getIngredientes() == null) continue;
+                for (ProductoIngrediente pi : ps.getProducto().getIngredientes()) {
+                    int cantidadDescontar = pi.getCantidad() * ps.getCantidad();
+                    ActualizarIngredienteDTO dto = new ActualizarIngredienteDTO(pi.getIngrediente().getId(), cantidadDescontar);
+                    objetosBO.getIngredientesBO().quitarStockIngrediente(dto);
+                }
+            }
+
+            //  Marcar comanda como entregada
+            objetosBO.getComandaBO().entregar(comandaEditar.getId());
+
+            // Mesa regresa a LIBRE
+            objetosBO.getMesaBO().actualizarDisponibilidad(comandaEditar.getMesa().getId());
+
+            JOptionPane.showMessageDialog(this, "Comanda entregada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEntregarActionPerformed
 
@@ -504,16 +594,16 @@ public class FrmNuevaComanda extends javax.swing.JFrame {
                 this.comandaEditar = nueva;
                 txtFolio.setText(nueva.getFolio());
                 objetosBO.getMesaBO().actualizarDisponibilidad(mesaSeleccionada.getId());
-                // Actualizamos el total si ya hay productos
                 if (totalActual > 0) {
                     ComandaDTO dtoActualizar = new ComandaDTO(totalActual);
                     objetosBO.getComandaBO().actualizar(nueva.getId(), dtoActualizar);
+                    guardarProductosSeleccionados(nueva); 
                 }
                 JOptionPane.showMessageDialog(this, "Comanda guardada con folio: " + nueva.getFolio(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                // Actualizar con el total de jTable2
                 ComandaDTO dto = new ComandaDTO(totalActual);
                 objetosBO.getComandaBO().actualizar(comandaEditar.getId(), dto);
+                guardarProductosSeleccionados(comandaEditar); 
                 JOptionPane.showMessageDialog(this, "Comanda actualizada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
             cargarDatosComanda(comandaEditar);

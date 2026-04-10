@@ -81,11 +81,11 @@ public class IngredientesBO implements IIngredientesBO{
                 throw new NegocioException("La cantidad a agregar debe ser mayor a 0.");
             }
             Ingrediente ingredienteAActualizar = ingredientesDAO.consultarIngredientePorId(ingrediente.getIdIngrediente());
-            Integer cantidadTotal = ingrediente.getCantidad() - ingredienteAActualizar.getStock();
+            Integer cantidadTotal = ingredienteAActualizar.getStock() - ingrediente.getCantidad();
             if(cantidadTotal < 0){
                 throw new NegocioException("No se puede quitar mas del stock actual que se tiene.");
             }
-            Ingrediente ingredienteActualizado = ingredientesDAO.agregarStockIngrediente(ingrediente);
+            Ingrediente ingredienteActualizado = ingredientesDAO.quitarStockIngrediente(ingrediente);
             return ingredienteActualizado;
         }catch(PersistenciaException ex){
             throw new NegocioException("Error al quitar el stock al ingrediente.",ex);

@@ -5,7 +5,6 @@
 package TestFrames;
 
 
-import com.mycompany.restaurantedominio.ClienteFrecuente;
 import com.mycompany.restaurantenegocio.ClienteBO;
 import com.mycompany.restaurantenegocio.ComandaBO;
 import com.mycompany.restaurantenegocio.IClienteBO;
@@ -13,11 +12,13 @@ import com.mycompany.restaurantenegocio.IComandaBO;
 import com.mycompany.restaurantenegocio.IIngredientesBO;
 import com.mycompany.restaurantenegocio.IMesaBO;
 import com.mycompany.restaurantenegocio.IProductoBO;
+import com.mycompany.restaurantenegocio.IProductoSeleccionadoBO;
 import com.mycompany.restaurantenegocio.IReporteClientesFrecuentesBO;
 import com.mycompany.restaurantenegocio.IngredientesBO;
 import com.mycompany.restaurantenegocio.MesaBO;
 import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 import com.mycompany.restaurantenegocio.ProductoBO;
+import com.mycompany.restaurantenegocio.ProductoSeleccionadoBO;
 import com.mycompany.restaurantenegocio.ReporteClientesFrecuentesBO;
 import com.mycompany.restaurantepersistencia.ClienteDAO;
 import com.mycompany.restaurantepersistencia.ComandaDAO;
@@ -26,18 +27,13 @@ import com.mycompany.restaurantepersistencia.IComandaDAO;
 import com.mycompany.restaurantepersistencia.IIngredientesDAO;
 import com.mycompany.restaurantepersistencia.IMesaDAO;
 import com.mycompany.restaurantepersistencia.IProductoDAO;
+import com.mycompany.restaurantepersistencia.IProductoSeleccionadoDAO;
 import com.mycompany.restaurantepersistencia.IngredientesDAO;
 import com.mycompany.restaurantepersistencia.MesaDAO;
 import com.mycompany.restaurantepersistencia.ProductoDAO;
-import com.mycompany.restaurantepresentacion.FrmBuscadorIngredientes;
-import com.mycompany.restaurantepresentacion.FrmGeneracionReportes;
-import com.mycompany.restaurantepresentacion.FrmGestionComandas;
-import com.mycompany.restaurantepresentacion.FrmGestionDeComandas;
+import com.mycompany.restaurantepersistencia.ProductoSeleccionadoDAO;
 import com.mycompany.restaurantepresentacion.FrmInicio;
-import com.mycompany.restaurantepresentacion.FrmListaClientes;
-import com.mycompany.restaurantepresentacion.FrmRegistrarNuevoIngrediente;
-import com.mycompany.restaurantepresentacion.FrmRegistroCliente;
-import com.mycompany.restaurantepresentacion.FrmReporteClientesFrecuentes;
+
 
 
 /**
@@ -54,16 +50,19 @@ public class TestearLosFrames {
         IComandaDAO comandaDAO = new ComandaDAO();
         IMesaDAO mesaDAO = new MesaDAO();
         IProductoDAO productoDAO = new ProductoDAO();
+        IProductoSeleccionadoDAO psDAO = new ProductoSeleccionadoDAO();
         IIngredientesDAO ingredientesDAO = new IngredientesDAO();
-        
+
         IClienteBO clienteBO = new ClienteBO(clienteDAO);
         IComandaBO comandaBO = new ComandaBO(comandaDAO);
         IMesaBO mesaBO = new MesaBO(mesaDAO);
-        IProductoBO productoBO = new ProductoBO(productoDAO);
-        IReporteClientesFrecuentesBO reporteBO = new ReporteClientesFrecuentesBO(clienteDAO);
         IIngredientesBO ingredientesBO = new IngredientesBO(ingredientesDAO);
-        
-        ObjetosBoDTO objetosBO = new ObjetosBoDTO(clienteBO, comandaBO,mesaBO, productoBO,reporteBO,ingredientesBO);
+        IProductoBO productoBO = new ProductoBO(productoDAO);
+        IProductoSeleccionadoBO psBO = new ProductoSeleccionadoBO(psDAO); 
+        IReporteClientesFrecuentesBO reporteBO = new ReporteClientesFrecuentesBO(clienteDAO);
+
+        ObjetosBoDTO objetosBO = new ObjetosBoDTO(clienteBO, comandaBO, mesaBO, productoBO, reporteBO, ingredientesBO, psBO);
+
         FrmInicio frame = new FrmInicio(objetosBO);
         frame.setVisible(true);
         

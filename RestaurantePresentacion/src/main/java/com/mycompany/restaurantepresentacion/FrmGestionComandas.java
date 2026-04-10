@@ -26,11 +26,12 @@ public class FrmGestionComandas extends javax.swing.JFrame {
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(FrmGestionComandas.class.getName());
     
     private final ObjetosBoDTO objetosBO;
-    private final boolean esMesero = false; //aqui no se porque me marca error bro no se como lo tenias inicializado
+    private final boolean esMesero;
     private List<Comanda> listaActual = new ArrayList<>();
     
-    public FrmGestionComandas(ObjetosBoDTO objetosBO) {
+    public FrmGestionComandas(ObjetosBoDTO objetosBO, boolean esMesero) {
         this.objetosBO = objetosBO;
+        this.esMesero = esMesero;
         initComponents();
         inicializarTabla();
         insertarMesasIniciales();

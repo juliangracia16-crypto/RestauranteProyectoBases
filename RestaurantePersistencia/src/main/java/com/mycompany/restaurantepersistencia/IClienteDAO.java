@@ -27,4 +27,6 @@ public interface IClienteDAO {
     
     public abstract ClienteGeneral crear() throws PersistenciaException;
     
+    public ClienteGeneral obtenerClienteGeneral() throws PersistenciaException;
+    
 }

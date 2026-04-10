@@ -128,6 +128,19 @@ public class ClienteDAO implements IClienteDAO{
         }
     }
 
+    @Override
+    public ClienteGeneral obtenerClienteGeneral() throws PersistenciaException {
+        try {
+            EntityManager entityManager = ManejadorConexiones.crearEntityManager();
+            String jpql = "SELECT cg FROM ClienteGeneral cg";
+            List<ClienteGeneral> lista = entityManager.createQuery(jpql, ClienteGeneral.class).getResultList();
+            return lista.isEmpty() ? null : lista.get(0);
+        } catch (PersistenceException ex) {
+            LOGGER.severe(ex.getMessage());
+            throw new PersistenciaException("Error al buscar el Cliente General.", ex);
+        }
+    }
+
     
     
 }

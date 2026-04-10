@@ -149,7 +149,7 @@ public class FrmGestionDeComandas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnComandasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComandasActionPerformed
-        FrmGestionComandas frame = new FrmGestionComandas(objetosBO);
+        FrmGestionComandas frame = new FrmGestionComandas(objetosBO, false);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnComandasActionPerformed

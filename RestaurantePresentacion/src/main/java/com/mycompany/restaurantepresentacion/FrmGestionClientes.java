@@ -5,6 +5,7 @@
 package com.mycompany.restaurantepresentacion;
 
 import com.mycompany.restaurantedominio.ClienteFrecuente;
+import com.mycompany.restaurantedominio.ClienteGeneral;
 import com.mycompany.restaurantenegocio.NegocioException;
 import com.mycompany.restaurantenegocio.ObjetosBoDTO;
 import java.awt.event.WindowAdapter;
@@ -54,23 +55,28 @@ public class FrmGestionClientes extends javax.swing.JFrame {
             modelo.setRowCount(0);
             this.listaActual = new ArrayList<>();
 
-            // Primero agregamos Cliente General
-            try {
-                objetosBO.getClienteBO().crear(); // crea o retorna el existente
-            } catch (NegocioException ex) {
-                LOGGER.severe(ex.getMessage());
+            // Cargamos los clientes frecuentes
+            List<ClienteFrecuente> frecuentes = objetosBO.getClienteBO().obtenerTodos();
+
+            if (frecuentes.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "No hay clientes frecuentes registrados aún.",
+                    "Información", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                llenarTabla(frecuentes);
             }
 
-            // Llenamos la tabla con frecuentes
-            List<ClienteFrecuente> frecuentes = objetosBO.getClienteBO().obtenerTodos();
-            llenarTabla(frecuentes);
+//          Solo mostramos Cliente General si ya existe en la BD
+            ClienteGeneral cg = objetosBO.getClienteBO().buscarClienteGeneral();
+            if (cg != null) {
+                modelo.addRow(new Object[]{
+                    "Cliente General", "—", "—", "—", "—", "—"
+                });
+            }
 
-            // Agregamos fila de Cliente General al final
-            modelo.addRow(new Object[]{
-                "Cliente General", "—", "—", "—", "—", "—"
-            });
         } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

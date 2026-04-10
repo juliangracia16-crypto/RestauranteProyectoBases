@@ -1,10 +1,12 @@
 com\mycompany\restaurantenegocio\ObjetosBoDTO.class
 Excepciones\NegocioException.class
+com\mycompany\restaurantenegocio\ProductoSeleccionadoBO.class
 com\mycompany\restaurantenegocio\IComandaBO.class
 com\mycompany\restaurantenegocio\IProductoBO.class
 com\mycompany\restaurantenegocio\IIngredientesBO.class
 com\mycompany\restaurantenegocio\IClienteBO.class
 com\mycompany\restaurantenegocio\ComandaBO.class
+com\mycompany\restaurantenegocio\IProductoSeleccionadoBO.class
 com\mycompany\restaurantenegocio\ReporteClientesFrecuentesBO.class
 com\mycompany\restaurantenegocio\IMesaBO.class
 com\mycompany\restaurantenegocio\MesaBO.class

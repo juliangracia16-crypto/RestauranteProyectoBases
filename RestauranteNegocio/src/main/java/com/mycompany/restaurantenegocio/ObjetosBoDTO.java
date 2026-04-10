@@ -12,14 +12,16 @@ public class ObjetosBoDTO {
     private final IProductoBO productoBO;
     private final IReporteClientesFrecuentesBO reporteBO;
     private final IIngredientesBO ingredientesBO;
+    private final IProductoSeleccionadoBO productoSeleccionadoBO;
     
-    public ObjetosBoDTO(IClienteBO clienteBO, IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO, IReporteClientesFrecuentesBO reporteBO, IIngredientesBO ingredientesBO) {
+    public ObjetosBoDTO(IClienteBO clienteBO, IComandaBO comandaBO, IMesaBO mesaBO, IProductoBO productoBO, IReporteClientesFrecuentesBO reporteBO, IIngredientesBO ingredientesBO, IProductoSeleccionadoBO productoSeleccionadoBO) {
         this.clienteBO = clienteBO;
         this.comandaBO = comandaBO;
         this.mesaBO = mesaBO;
         this.productoBO = productoBO;
         this.reporteBO = reporteBO;
         this.ingredientesBO = ingredientesBO;
+        this.productoSeleccionadoBO = productoSeleccionadoBO;
     }
 
     public IClienteBO getClienteBO() {
@@ -44,6 +46,10 @@ public class ObjetosBoDTO {
 
     public IIngredientesBO getIngredientesBO() {
         return ingredientesBO;
+    }
+    
+    public IProductoSeleccionadoBO getProductoSeleccionadoBO(){
+        return productoSeleccionadoBO;
     }
     
 }

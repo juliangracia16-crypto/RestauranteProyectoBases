@@ -12,10 +12,10 @@
     <class>com.mycompany.restaurantedominio.ProductoIngrediente</class>
     <class>com.mycompany.restaurantedominio.Producto</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/proyectorestaurantebd?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/restaurante_db?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="18854Gra"/>
+      <property name="javax.persistence.jdbc.password" value="luis"/>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
       <property name="eclipselink.ddl-generation" value="create-tables"/>
       <property name="eclipselink.ddl-generation.output-mode" value="database"/>

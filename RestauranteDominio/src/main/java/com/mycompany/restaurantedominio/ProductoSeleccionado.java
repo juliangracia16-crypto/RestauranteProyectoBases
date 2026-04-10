@@ -7,6 +7,7 @@ package com.mycompany.restaurantedominio;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,7 +31,7 @@ public class ProductoSeleccionado implements Serializable {
     @JoinColumn(name = "id_comanda", nullable = false)
     private Comanda comanda;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_producto", nullable = false)
     private Producto producto;
     
@@ -49,12 +50,12 @@ public class ProductoSeleccionado implements Serializable {
     public ProductoSeleccionado() {}
     
     public ProductoSeleccionado(Comanda comanda, Producto producto, Integer cantidad, Double precioUnitario, String comentario) {
-        this.comanda        = comanda;
-        this.producto       = producto;
-        this.cantidad       = cantidad;
+        this.comanda = comanda;
+        this.producto = producto;
+        this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
-        this.subtotal       = precioUnitario * cantidad;
-        this.comentario     = comentario;
+        this.subtotal = precioUnitario * cantidad;
+        this.comentario = comentario;
     }
     
     public Long getId() { 

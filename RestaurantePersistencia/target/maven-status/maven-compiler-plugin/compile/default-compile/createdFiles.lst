@@ -14,6 +14,8 @@ com\mycompany\restaurantepersistencia\IProductoDAO.class
 com\mycompany\restaurantepersistencia\IMesaDAO.class
 com\mycompany\restaurantepersistencia\adapters\TipoProductoDominioATipoProductoDTOAdapter.class
 com\mycompany\restaurantepersistencia\ProductoDAO.class
+com\mycompany\restaurantepersistencia\ProductoSeleccionadoDAO.class
+com\mycompany\restaurantepersistencia\IProductoSeleccionadoDAO.class
 com\mycompany\restaurantepersistencia\ClienteDAO.class
 com\mycompany\restaurantepersistencia\MesaDAO.class
 com\mycompany\restaurantepersistencia\PersistenciaException.class

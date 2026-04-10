@@ -11,6 +11,7 @@
         <module>../RestauranteNegocio</module>
         <module>../RestauranteDominio</module>
         <module>../RestauranteDtos</module>
+        <module>../RestauranteUtilidades</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

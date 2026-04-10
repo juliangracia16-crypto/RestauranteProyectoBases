@@ -122,7 +122,7 @@ public class FrmInicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMeseroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMeseroActionPerformed
-        FrmGestionComandas frame = new FrmGestionComandas(objetosBO);
+        FrmGestionComandas frame = new FrmGestionComandas(objetosBO, true);
         frame.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnMeseroActionPerformed
