@@ -28,13 +28,36 @@ import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Formulario para registrar o editar productos dentro del sistema de restaurante.
+ * Permite capturar datos como nombre, descripción, precio, tipo,
+ * imagen y lista de ingredientes asociados.
+ * 
+ * Este formulario funciona en dos modos:
+ * - Registro de nuevo producto
+ * - Edición de producto existente
+ * 
+ * Autor: Daren Velazquez
+ */
 public class FrmRegistroProducto extends javax.swing.JDialog {
 
+    /** Objeto contenedor de lógica de negocio (BOs) */
     private final ObjetosBoDTO objetosBO;
+    /** Producto que se está editando (null si es nuevo) */
     private Producto productoEditar;
+    /** Modelo de la tabla de ingredientes */
     private DefaultTableModel modeloTabla;
+    /** Imagen cargada en formato byte[] */
     private byte[] imagenCargada;
 
+    /**
+     * Constructor para registrar un nuevo producto.
+     * 
+     * @param parent ventana padre
+     * @param modal indica si el diálogo es modal
+     * @param objetosBO acceso a la capa de negocio
+     */
+    
     public FrmRegistroProducto(java.awt.Frame parent, boolean modal, ObjetosBoDTO objetosBO) {
         super(parent, modal);
         this.objetosBO = objetosBO;
@@ -45,7 +68,15 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         configurarEventos();
         configurarModo();
     }
-
+    
+    /**
+     * Constructor para editar un producto existente.
+     * 
+     * @param parent ventana padre
+     * @param modal indica si el diálogo es modal
+     * @param objetosBO acceso a la capa de negocio
+     * @param producto producto a editar
+     */
     public FrmRegistroProducto(java.awt.Frame parent, boolean modal, ObjetosBoDTO objetosBO, Producto producto) {
         super(parent, modal);
         this.objetosBO = objetosBO;
@@ -57,6 +88,9 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         configurarModo();
     }
 
+    /**
+     * Configura el combo box de tipos de producto.
+     */
     private void configurarCombo() {
         cmbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(
                 new String[]{
@@ -69,6 +103,13 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         ));
     }
 
+    /**
+     * Configura la tabla de ingredientes:
+     * - Columnas
+     * - No editable
+     * - Tamaños
+     * - Selección única
+     */
     private void configurarTablaIngredientes() {
         modeloTabla = new DefaultTableModel(
                 new String[]{"ID", "Ingrediente", "Unidad", "Cantidad"},
@@ -92,7 +133,12 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         tblIngredientes.getColumnModel().getColumn(2).setPreferredWidth(100);
         tblIngredientes.getColumnModel().getColumn(3).setPreferredWidth(80);
     }
-
+    
+    /**
+     * Configura el modo del formulario:
+     * - Nuevo producto
+     * - Edición de producto existente
+     */
     private void configurarModo() {
         if (productoEditar == null) {
             lblRegistroProducto.setText("Nuevo Producto");
@@ -123,7 +169,10 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
             }
         }
     }
-
+    
+    /**
+     * Configura los eventos de los botones.
+     */
     private void configurarEventos() {
         btnGuardar.addActionListener(e -> accionGuardar());
         btnCancelar.addActionListener(e -> dispose());
@@ -131,7 +180,10 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         btnAgregarIngrediente.addActionListener(e -> accionAgregarIngrediente());
         btnEliminarIngrediente.addActionListener(e -> accionEliminarIngrediente());
     }
-
+    
+    /**
+     * Acción para guardar el producto (nuevo o editado).
+     */
     private void accionGuardar() {
         if (!validarCampos()) {
             return;
@@ -170,6 +222,9 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Permite seleccionar y cargar una imagen desde el sistema de archivos.
+     */
     private void accionCargarImagen() {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png", "gif"));
@@ -185,6 +240,11 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Muestra la imagen cargada en el label correspondiente.
+     * 
+     * @param bytes imagen en formato byte[]
+     */
     private void mostrarImagen(byte[] bytes) {
         ImageIcon icon = new ImageIcon(bytes);
         Image scaled = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -192,6 +252,9 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         lblImagen.setText("");
     }
 
+    /**
+     * Abre el buscador de ingredientes y permite agregarlos a la tabla.
+     */
     private void accionAgregarIngrediente() {
         FrmBuscadorIngredientes buscador = new FrmBuscadorIngredientes(
                 objetosBO,
@@ -233,6 +296,9 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         buscador.setVisible(true);
     }
 
+    /**
+     * Elimina el ingrediente seleccionado de la tabla.
+     */
     private void accionEliminarIngrediente() {
         int fila = tblIngredientes.getSelectedRow();
         if (fila == -1) {
@@ -244,6 +310,11 @@ public class FrmRegistroProducto extends javax.swing.JDialog {
         modeloTabla.removeRow(fila);
     }
 
+    /**
+     * Valida los campos del formulario antes de guardar.
+     * 
+     * @return true si los datos son válidos, false en caso contrario
+     */
     private boolean validarCampos() {
         String nombre = txtNombre.getText().trim();
         String precioTx = txtPrecio.getText().trim();
