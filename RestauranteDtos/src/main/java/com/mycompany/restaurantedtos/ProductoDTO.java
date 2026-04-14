@@ -1,6 +1,24 @@
 package com.mycompany.restaurantedtos;
 import java.util.List;
 
+
+/**
+ * DTO que representa un producto dentro del sistema.
+ * 
+
+ *  * Esta clase se utiliza para transportar datos entre las capas.
+ * 
+ * Contiene la información necesaria para:
+ * - Registrar un producto
+ * - Actualizar un producto
+ * - Transferir datos de producto sin exponer directamente la entidad
+ * 
+ * Incluye:
+ * - Datos básicos (nombre, descripción, precio)
+ * - Tipo y estado del producto
+ * - Imagen en formato binario
+ * - Lista de ingredientes asociados
+ */
 public class ProductoDTO {
 
     private Long idProducto;
@@ -12,10 +30,23 @@ public class ProductoDTO {
     private byte[] imagen;
     private List<ProductoIngredienteDTO> ingredientes;
 
+    /**
+     * Constructor vacío.
+     * 
+     */
     public ProductoDTO() {
     }
 
-    // CONSTRUCTOR MODO NUEVO
+    /**
+     * Constructor para registrar un nuevo producto.
+     * 
+     * 
+     * @param nombre nombre del producto
+     * @param descripcion descripción del producto
+     * @param precio precio del producto
+     * @param tipo tipo de producto
+     * @param ingredientes lista de ingredientes asociados
+     */
     public ProductoDTO(String nombre, String descripcion, Double precio,
             TipoProducto tipo, List<ProductoIngredienteDTO> ingredientes) {
         this.nombre = nombre;
@@ -25,7 +56,18 @@ public class ProductoDTO {
         this.ingredientes = ingredientes;
     }
 
-    // CONSTRUCTOR PARA EL MODO EDITAR
+    /**
+     * Constructor para actualizar un producto existente.
+     * 
+     * 
+     * @param idProducto identificador del producto
+     * @param nombre nombre del producto
+     * @param descripcion descripción del producto
+     * @param precio precio del producto
+     * @param tipo tipo de producto
+     * @param estado estado actual del producto
+     * @param ingredientes lista de ingredientes asociados
+     */
     public ProductoDTO(Long idProducto, String nombre, String descripcion, Double precio,
             TipoProducto tipo, EstadoProducto estado, List<ProductoIngredienteDTO> ingredientes) {
         this.idProducto = idProducto;
@@ -37,6 +79,7 @@ public class ProductoDTO {
         this.ingredientes = ingredientes;
     }
 
+    // GETTERS Y SETTERS
     public Long getIdProducto() {
         return idProducto;
     }

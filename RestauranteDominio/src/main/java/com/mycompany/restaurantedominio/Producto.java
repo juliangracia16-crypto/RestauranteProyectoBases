@@ -14,6 +14,12 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * Entidad que representa un producto dentro del sistema del restaurante.
+ * 
+ * Esta clase es parte del dominio y está mapeada a la tabla "productos"
+ * en la base de datos mediante JPA.
+ */
 @Entity
 @Table(name = "productos")
 public class Producto implements Serializable {
@@ -47,9 +53,21 @@ public class Producto implements Serializable {
     @OneToMany(mappedBy = "producto", fetch = FetchType.EAGER)
     private List<ProductoIngrediente> ingredientes;
 
+    /**
+     * Constructor vacío requerido por JPA
+     */
     public Producto() {
     }
-
+    /**
+     * Constructor para crear un producto.
+     * 
+     * El estado se establece automáticamente como ACTIVO.
+     * 
+     * @param nombre nombre del producto
+     * @param descripcion descripción del producto
+     * @param precio precio del producto
+     * @param tipo tipo de producto
+     */
     public Producto(String nombre, String descripcion, Double precio, TipoProducto tipo) {
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -58,7 +76,16 @@ public class Producto implements Serializable {
         this.estado = EstadoProducto.ACTIVO; // Por defecto al instanciar
     }
 
-    // Método que verifica el stock de los ingredientes y regresa boolean falso si no está disponible en el stock, y true si si está disponible 
+    /**
+     * Determina si el producto está disponible para ser vendido.
+     * 
+     * Reglas:
+     * - Debe tener ingredientes
+     * - Debe estar en estado ACTIVO
+     * - Todos los ingredientes deben tener stock suficiente
+     * 
+     * @return true si el producto está disponible, false en caso contrario
+     */
     public boolean isDisponible() {
         if (ingredientes == null || ingredientes.isEmpty()) {
             return false;
@@ -74,6 +101,7 @@ public class Producto implements Serializable {
         return true;
     }
 
+    // GETTERS Y SETTERS
     public Long getId() {
         return id;
     }

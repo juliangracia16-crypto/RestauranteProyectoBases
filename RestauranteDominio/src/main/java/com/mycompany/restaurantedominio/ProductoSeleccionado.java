@@ -16,8 +16,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- *
- * @author PC GAMER MASTER RACE
+ * Entidad que representa un producto seleccionado dentro de una comanda.
+ * 
+ * Esta clase modela la relación entre una comanda y los productos que contiene,
+ * incluyendo la cantidad, precio unitario, subtotal y posibles comentarios.
+ * 
+ * Se utiliza para persistir los productos que un cliente ha ordenado.
+ * 
  */
 @Entity
 @Table(name = "productos_seleccionados")
@@ -47,8 +52,21 @@ public class ProductoSeleccionado implements Serializable {
     @Column(name = "comentario")
     private String comentario;
     
+    /**
+     * Constructor vacío requerido por JPA.
+     */
     public ProductoSeleccionado() {}
     
+    /**
+     * Constructor principal para crear un producto seleccionado.
+     * Calcula automáticamente el subtotal.
+     * 
+     * @param comanda Comanda asociada
+     * @param producto Producto seleccionado
+     * @param cantidad Cantidad del producto
+     * @param precioUnitario Precio unitario del producto
+     * @param comentario Comentario opcional
+     */
     public ProductoSeleccionado(Comanda comanda, Producto producto, Integer cantidad, Double precioUnitario, String comentario) {
         this.comanda = comanda;
         this.producto = producto;
@@ -58,6 +76,7 @@ public class ProductoSeleccionado implements Serializable {
         this.comentario = comentario;
     }
     
+    // GETTERS Y SETTERS
     public Long getId() { 
         return id; 
     }

@@ -5,8 +5,9 @@
 package com.mycompany.restaurantedtos;
 
 /**
- *
- * @author PC GAMER MASTER RACE
+ * Enumeración que define los tipos de productos disponibles en el sistema.
+ * 
+ * Se utiliza para clasificar los productos dentro del menú del restaurante.
  */
 public enum TipoProducto {
     PLATILLO,
